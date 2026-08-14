@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get a quote · Anvil Nutrition</title>
+<meta name="description" content="Tell us what you're making and we'll come back with pricing and lead time — usually within two business days. Perth, Western Australia.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-in">
+    <a class="wordmark" href="index.html" aria-label="Anvil Nutrition — home"><span class="wm-main">ANVIL</span><span class="wm-sub">NUTRITION</span></a>
+    <nav class="nav-desktop" aria-label="Primary">
+      <a class="nav-link" href="how-it-works.html">How it works</a>
+      <a class="nav-link" href="pricing.html">Pricing</a>
+      <a class="nav-link" href="portal.html">Client portal</a>
+      <a class="nav-link" href="about.html">About</a>
+      <a class="nav-link" href="faq.html">FAQ</a>
+      <a class="btn btn-nav" href="contact.html">Get a quote</a>
+    </nav>
+    <button class="menu-toggle" data-menu-toggle aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+  <nav class="mobile-menu" data-mobile-menu hidden aria-label="Primary, mobile">
+    <a href="how-it-works.html">How it works</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="portal.html">Client portal</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a class="btn" href="contact.html">Get a quote</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="wrap pt-120 pb-72">
+    <div class="split-15-10 align-end">
+      <h1 class="h-page">Get a quote.</h1>
+      <p class="sub">Tell us what you're making and we'll come back with pricing and lead time — usually within two business days.</p>
+    </div>
+  </section>
+
+  <section class="wrap pt-40 pb-120">
+    <div class="split-08-10">
+
+      <div>
+        <a class="contact-card" href="mailto:sales@anvilnutrition.com.au">
+          <span class="label">Email</span>
+          <div class="v">sales@anvilnutrition.com.au</div>
+        </a>
+        <a class="contact-card" href="tel:0448729899">
+          <span class="label">Phone</span>
+          <div class="v">0448 729 899</div>
+        </a>
+        <div class="contact-card static">
+          <span class="label">Location</span>
+          <div class="v">Perth, Western Australia</div>
+          <div class="meta">Mon–Fri, 8am–4pm AWST</div>
+        </div>
+        <div style="margin-top:40px">
+          <div class="brief-hint-title">What to include in your brief</div>
+          <div class="brief-hint">Product category  ·  Target formula or concept  ·  Volume / order size  ·  Packaging format  ·  Timeline  ·  Any compliance requirements</div>
+        </div>
+      </div>
+
+      <form id="brief-form" onsubmit="return false">
+        <div class="form-grid">
+          <label class="field">
+            <span class="label">Name</span>
+            <input type="text" name="name" placeholder="Your name" autocomplete="name">
+          </label>
+          <label class="field">
+            <span class="label">Company</span>
+            <input type="text" name="company" placeholder="Brand / company" autocomplete="organization">
+          </label>
+          <label class="field">
+            <span class="label">Email</span>
+            <input type="email" name="email" placeholder="you@brand.com" autocomplete="email">
+          </label>
+          <label class="field">
+            <span class="label">Product category</span>
+            <select name="category">
+              <option>Preworkout &amp; Powders</option>
+              <option>Hydration &amp; Drinks</option>
+              <option>Cosmetics &amp; Skincare</option>
+              <option>Capsules &amp; Tablets</option>
+              <option>Filtered Water Vials</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="label">Target formula or concept</span>
+            <input type="text" name="formula" placeholder="Existing formula, or a concept to develop">
+          </label>
+          <label class="field">
+            <span class="label">Volume / order size</span>
+            <input type="text" name="volume" placeholder="e.g. 1,000 units">
+          </label>
+          <label class="field">
+            <span class="label">Packaging format</span>
+            <input type="text" name="packaging" placeholder="e.g. tubs, sachets, bottles, jars">
+          </label>
+          <label class="field">
+            <span class="label">Timeline</span>
+            <input type="text" name="timeline" placeholder="Target launch or deadline">
+          </label>
+        </div>
+        <label class="field field-full">
+          <span class="label">Any compliance requirements</span>
+          <input type="text" name="compliance" placeholder="e.g. TGA, FSANZ, ACCC, COA needs">
+        </label>
+        <label class="field field-full">
+          <span class="label">Additional notes</span>
+          <textarea rows="3" name="notes" placeholder="Anything else we should know"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="btn" type="button" id="send-brief">Send brief</button>
+          <span class="or">Or email <a href="mailto:sales@anvilnutrition.com.au">sales@anvilnutrition.com.au</a></span>
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap pt-72 pb-40">
+    <div class="foot-grid">
+      <div>
+        <div class="wordmark" style="margin-bottom:18px"><span class="wm-main">ANVIL</span><span class="wm-sub">NUTRITION</span></div>
+        <p class="foot-blurb">Contract manufacturing for supplement, sports nutrition and cosmetic brands. Perth, Western Australia.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <a href="how-it-works.html">How it works</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="portal.html">Client portal</a>
+          <a href="about.html">About</a>
+          <a href="faq.html">FAQ</a>
+        </div>
+        <div class="foot-col">
+          <a href="mailto:sales@anvilnutrition.com.au">sales@anvilnutrition.com.au</a>
+          <a href="tel:0448729899">0448 729 899</a>
+          <span>Perth, WA</span>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bar">
+      <span>© 2026 Anvil Nutrition Pty Ltd</span>
+      <span>Built to spec. Delivered on time.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

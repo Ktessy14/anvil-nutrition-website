@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="./image-slot.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F4F2EE;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#14181B;-webkit-font-smoothing:antialiased}
+a{color:#B4622A;text-decoration:none}
+a:hover{color:#8F4C1E}
+input,button,textarea,select{font:inherit;color:inherit}
+input[type=range]{accent-color:#B4622A}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#D6D1C8;border-radius:6px}
+</style>
+</helmet>
+<div style="min-height:100vh;min-width:max-content;background:#F4F2EE;display: {{ deskDisplay }}">
+
+<aside style="width:244px;flex:0 0 244px;background:#101315;color:#E9E6E0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+  <div style="padding:22px 20px 18px 20px;border-bottom:1px solid #23282C">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:26px;height:26px;background:#B4622A;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;color:#fff">A</div>
+      <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.14em">ANVIL</div>
+    </div>
+    <div style="margin-top:4px;font-size:10px;letter-spacing:0.22em;color:#6E767C;text-transform:uppercase;padding-left:36px">Client Portal</div>
+  </div>
+
+  <div style="padding:16px 14px 10px 14px">
+    <div style="font-size:9px;letter-spacing:0.2em;color:#6E767C;text-transform:uppercase;padding:0 6px 8px 6px">Account</div>
+    <button onClick="{{ toggleBrands }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#191D20;border:1px solid #2A2F33;color:#E9E6E0;padding:9px 10px;cursor:pointer;text-align:left">
+      <span style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:0.04em">{{ activeBrand }}</span>
+      <span style="color:#6E767C;font-size:9px">▼</span>
+    </button>
+    <sc-if value="{{ brandsOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:4px;border:1px solid #2A2F33;background:#16191C">
+        <sc-for list="{{ brands }}" as="b" hint-placeholder-count="2">
+          <button onClick="{{ b.pick }}" style="width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #23282C;color:#A7AEB3;padding:8px 10px;font-size:12px;cursor:pointer" style-hover="color:#fff;background:#1D2225">{{ b.name }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <nav style="padding:8px 14px;display:flex;flex-direction:column;gap:1px;flex:1">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+      <button onClick="{{ n.go }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;border:0;padding:9px 10px;cursor:pointer;font-size:13px;letter-spacing:0.01em;background: {{ n.bg }};color: {{ n.fg }};border-left:2px solid {{ n.rule }}" style-hover="background:#1B2023">
+        <span>{{ n.label }}</span>
+        <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}">
+          <span style="background:#B4622A;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10px;min-width:18px;height:17px;display:flex;align-items:center;justify-content:center;padding:0 5px">{{ n.badge }}</span>
+        </sc-if>
+      </button>
+    </sc-for>
+  </nav>
+
+  <div style="padding:12px 14px;border-top:1px solid #23282C">
+    <a href="./Anvil%20Website.dc.html" style="display:flex;align-items:center;gap:8px;color:#8E959B;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase" style-hover="color:#B4622A">
+      <span style="font-size:13px">←</span>Back to website
+    </a>
+  </div>
+
+  <div style="padding:14px;border-top:1px solid #23282C">
+    <div style="font-size:9px;letter-spacing:0.2em;color:#6E767C;text-transform:uppercase;margin-bottom:9px">Your Anvil contact</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;flex:0 0 34px;background:#2A2F33;color:#D8CFC4;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:12px">DW</div>
+      <div style="min-width:0">
+        <div style="font-size:12.5px;font-weight:600">Dana Whitmore</div>
+        <div style="font-size:11px;color:#7C848A">Account Manager</div>
+      </div>
+    </div>
+    <button onClick="{{ goMessages }}" style="margin-top:11px;width:100%;background:transparent;border:1px solid #2E3438;color:#D2CEC7;padding:8px;font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#B4622A;color:#fff">Message Dana</button>
+  </div>
+</aside>
+
+<div style="flex:1;min-width:1160px;display:flex;flex-direction:column">
+  <header style="height:62px;flex:0 0 62px;background:#FFFFFF;border-bottom:1px solid #E4E0D9;display:flex;align-items:center;gap:18px;padding:0 28px;position:sticky;top:0;z-index:20">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8A9096;letter-spacing:0.04em">{{ crumb }}</div>
+    <div style="flex:1;max-width:380px;margin-left:auto">
+      <div style="display:flex;align-items:center;gap:8px;border:1px solid #E4E0D9;background:#F8F7F4;padding:7px 10px">
+        <span style="color:#A9AFB4;font-size:12px">⌕</span>
+        <input placeholder="Search projects, documents, batch numbers" style="border:0;background:transparent;outline:none;width:100%;font-size:12.5px" />
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#B3B8BC;border:1px solid #E4E0D9;padding:1px 4px">⌘K</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;border:1px solid #E4E0D9;padding:3px">
+      <button onClick="{{ setDesktop }}" style="border:0;padding:5px 10px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;background: {{ deskBg }};color: {{ deskFg }}">Desktop</button>
+      <button onClick="{{ setMobile }}" style="border:0;padding:5px 10px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;background: {{ mobBg }};color: {{ mobFg }}">Mobile</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="position:relative;color:#4A5157;font-size:15px">⌗<span style="position:absolute;top:-3px;right:-5px;width:7px;height:7px;background:#B4622A;border-radius:50%"></span></div>
+      <div style="display:flex;align-items:center;gap:9px;padding-left:14px;border-left:1px solid #E4E0D9">
+        <div style="width:30px;height:30px;background:#20262A;color:#E4DFD7;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px">MR</div>
+        <div style="line-height:1.25">
+          <div style="font-size:12.5px;font-weight:600">Marcus Reid</div>
+          <div style="font-size:10.5px;color:#8A9096">Owner · NXT GEN LABS</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex:1;padding:30px 28px 60px 28px;max-width:1560px;width:100%">
+    <sc-if value="{{ showRoleBanner }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:11px;background:#14181B;color:#D6D2CB;padding:11px 16px;margin-bottom:22px;font-size:12.5px">
+        <span style="color:#B4622A">◆</span>{{ roleBanner }}
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:24px">
+          <div>
+            <h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:29px;letter-spacing:-0.02em;margin:0">Good morning, Marcus.</h1>
+            <p style="margin:7px 0 0 0;font-size:14px;color:#5F666C">Three projects in motion. Two things are waiting on you.</p>
+          </div>
+          <button onClick="{{ goProject }}" style="background:#B4622A;color:#fff;border:0;padding:11px 18px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#95501F">Open APEX PUMP</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#E4E0D9;border:1px solid #E4E0D9;margin-bottom:26px">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="5">
+            <div style="background:#fff;padding:16px 18px">
+              <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">{{ s.label }}</div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px">
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:26px;letter-spacing:-0.02em;color: {{ s.tone }}">{{ s.value }}</div>
+                <div style="font-size:11.5px;color:#8A9096">{{ s.note }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:5px;height:5px;background:#B4622A"></div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase">Waiting on you</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px">
+          <sc-for list="{{ waiting }}" as="w" hint-placeholder-count="2">
+            <div style="background:#fff;border:1px solid #E4E0D9;border-top:2px solid #B4622A;padding:18px 20px;display:flex;gap:18px;align-items:center">
+              <div style="flex:1;min-width:0">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#B4622A;letter-spacing:0.08em">{{ w.kind }}</div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;margin-top:5px">{{ w.title }}</div>
+                <div style="font-size:12.5px;color:#5F666C;margin-top:5px">{{ w.meta }}</div>
+                <div style="font-size:11.5px;color:#B4622A;margin-top:7px">{{ w.age }}</div>
+              </div>
+              <button onClick="{{ w.go }}" style="flex:0 0 auto;background:#14181B;color:#fff;border:0;padding:10px 15px;font-size:11px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#B4622A">{{ w.cta }}</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:26px;align-items:start">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase">Your projects</div>
+            </div>
+            <div style="background:#fff;border:1px solid #E4E0D9">
+              <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+                <div onClick="{{ p.go }}" style="padding:18px 20px;border-bottom:1px solid #EEEBE5;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:22px;align-items:center" style-hover="background:#FAF9F6">
+                  <div style="min-width:0">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                      <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:-0.01em">{{ p.name }}</div>
+                      <div style="font-size:13px;color:#5F666C">{{ p.variant }}</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5">{{ p.ref }}</div>
+                      <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 7px;background: {{ p.pillBg }};color: {{ p.pillFg }}">{{ p.stage }}</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+                      <div style="flex:1;height:4px;background:#EEEBE5;position:relative">
+                        <div style="position:absolute;left:0;top:0;bottom:0;background: {{ p.barColor }};width: {{ p.pctW }}"></div>
+                      </div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5F666C;width:34px;text-align:right">{{ p.pct }}%</div>
+                    </div>
+                    <div style="display:flex;gap:22px;margin-top:12px;font-size:12px;color:#5F666C;flex-wrap:wrap">
+                      <div><span style="color:#9AA0A5">Next</span> {{ p.next }}</div>
+                      <div><span style="color:#9AA0A5">Waiting on</span> <span style="color: {{ p.waitColor }};font-weight:600">{{ p.waiting }}</span></div>
+                      <div><span style="color:#9AA0A5">Updated</span> {{ p.updated }}</div>
+                    </div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">{{ p.windowLabel }}</div>
+                    <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:14.5px;margin-top:5px">{{ p.window }}</div>
+                    <div style="font-size:11.5px;color:#8A9096;margin-top:6px">{{ p.owner }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Recent activity</div>
+              <div style="background:#fff;border:1px solid #E4E0D9;padding:6px 18px 14px 18px">
+                <sc-for list="{{ activity }}" as="a" hint-placeholder-count="6">
+                  <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #F1EEE9">
+                    <div style="flex:0 0 7px;width:7px;height:7px;margin-top:5px;background: {{ a.tone }};border-radius:50%"></div>
+                    <div style="min-width:0">
+                      <div style="font-size:12.5px;line-height:1.45">{{ a.text }}</div>
+                      <div style="font-size:11px;color:#9AA0A5;margin-top:3px;font-family:'IBM Plex Mono',monospace">{{ a.when }} · {{ a.ref }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Reorder in one click</div>
+              <div style="background:#14181B;color:#E9E6E0;padding:20px">
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:17px">CREA MONO 300g</div>
+                <div style="font-size:12.5px;color:#9AA0A5;margin-top:5px">Last run 2,000 units · delivered 6 Jun</div>
+                <div style="font-size:12.5px;color:#C9CDD1;margin-top:14px;line-height:1.55">Formula, packaging and label are current. Materials in stock for 14 Aug.</div>
+                <button onClick="{{ goReorder }}" style="margin-top:16px;width:100%;background:#B4622A;color:#fff;border:0;padding:11px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#C97733">Start reorder</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProject }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="background:#fff;border:1px solid #E4E0D9;padding:24px 26px;margin-bottom:22px">
+      <div style="display:flex;justify-content:space-between;gap:34px;flex-wrap:wrap">
+        <div style="min-width:0">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9AA0A5;letter-spacing:0.1em">ANV-2418 · NXT GEN LABS</div>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-top:8px;flex-wrap:wrap">
+            <h1 style="font-family:'Archivo',sans-serif;font-weight:800;font-size:31px;letter-spacing:-0.025em;margin:0">APEX PUMP</h1>
+            <div style="font-family:'Archivo',sans-serif;font-weight:500;font-size:21px;color:#7A8187">Mango</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <sc-for list="{{ projChips }}" as="c" hint-placeholder-count="5">
+              <div style="border:1px solid #E4E0D9;background:#F8F7F4;padding:5px 9px;font-size:11.5px;color:#5F666C">{{ c }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;gap:1px;background:#E4E0D9;border:1px solid #E4E0D9">
+          <div style="background:#fff;padding:14px 18px;min-width:150px">
+            <div style="font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9AA0A5">Current stage</div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:7px">Artwork approval</div>
+            <div style="font-size:11.5px;color:#B4622A;margin-top:4px">Waiting on you</div>
+          </div>
+          <div style="background:#fff;padding:14px 18px;min-width:150px">
+            <div style="font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9AA0A5">Estimated dispatch</div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:7px">4 – 11 Sep</div>
+          </div>
+          <div style="background:#fff;padding:14px 18px;min-width:150px">
+            <div style="font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9AA0A5">Next update</div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:7px">Fri 31 Jul</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:3px;margin-top:22px">
+        <sc-for list="{{ miniStages }}" as="m" hint-placeholder-count="16">
+          <div title="{{ m.label }}" style="flex:1;height:6px;background: {{ m.color }}"></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#9AA0A5">
+        <div>Enquiry</div><div>Formula approved</div><div style="color:#B4622A;font-weight:600">Artwork · you are here</div><div>Production</div><div>Dispatch</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:2px;border-bottom:1px solid #E4E0D9;margin-bottom:24px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+        <button onClick="{{ t.go }}" style="border:0;background:transparent;padding:12px 18px;font-size:12.5px;letter-spacing:0.04em;cursor:pointer;margin-bottom:-1px;border-bottom:2px solid {{ t.rule }};color: {{ t.fg }};font-weight: {{ t.weight }}" style-hover="color:#14181B">{{ t.label }}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ tabOverview }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:26px;align-items:start">
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Project timeline</div>
+          <div style="background:#fff;border:1px solid #E4E0D9">
+            <sc-for list="{{ stages }}" as="st" hint-placeholder-count="16">
+              <div style="display:grid;grid-template-columns:34px minmax(0,1fr) 150px;gap:14px;align-items:center;padding:13px 20px;border-bottom:1px solid #F1EEE9;background: {{ st.rowBg }}">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B0B5B9">{{ st.num }}</div>
+                <div style="display:flex;align-items:center;gap:11px;min-width:0">
+                  <div style="width:9px;height:9px;flex:0 0 9px;background: {{ st.dot }};border-radius:50%"></div>
+                  <div style="font-size:13.5px;font-weight: {{ st.weight }};color: {{ st.fg }}">{{ st.label }}</div>
+                </div>
+                <div style="text-align:right"><span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background: {{ st.bg }};color: {{ st.color }}">{{ st.status }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Approved scope</div>
+            <div style="background:#fff;border:1px solid #E4E0D9;padding:16px 18px">
+              <sc-for list="{{ scope }}" as="sv" hint-placeholder-count="8">
+                <div style="display:flex;align-items:center;gap:9px;padding:6px 0;font-size:12.5px">
+                  <span style="color: {{ sv.tone }};font-size:11px">{{ sv.mark }}</span><span style="color: {{ sv.fg }}">{{ sv.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Project facts</div>
+            <div style="background:#fff;border:1px solid #E4E0D9">
+              <sc-for list="{{ facts }}" as="f" hint-placeholder-count="8">
+                <div style="display:flex;justify-content:space-between;gap:16px;padding:10px 16px;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+                  <div style="color:#8A9096">{{ f.k }}</div>
+                  <div style="font-weight:500;text-align:right">{{ f.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabFormula }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:26px;align-items:start">
+        <div>
+          <div style="background:#fff;border:1px solid #E4E0D9;padding:20px 22px;margin-bottom:16px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <div style="display:flex;align-items:center;gap:11px">
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:19px">APEX PUMP — Mango</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:#14181B;color:#fff;padding:3px 7px">v3</div>
+                <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background:#E7F0E9;color:#2F7D4F">Approved · locked</div>
+              </div>
+              <div style="font-size:12.5px;color:#5F666C;margin-top:8px">Approved 14 Jul 2026 · 14.5 g serve · 30 serves</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Batch for this run</div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:16px;margin-top:5px">435 kg · 1,000 units</div>
+            </div>
+          </div>
+          <div style="background:#FBF7F2;border:1px solid #EADDCE;padding:12px 16px;font-size:12.5px;color:#6B5B49;margin-bottom:16px;line-height:1.5">{{ formulaNote }}</div>
+          <div style="background:#fff;border:1px solid #E4E0D9">
+            <div style="display:grid;grid-template-columns:minmax(0,2.2fr) 1.4fr 0.9fr 0.7fr;gap:14px;padding:11px 18px;background:#F8F7F4;border-bottom:1px solid #E4E0D9;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">
+              <div>Ingredient</div><div>Function</div><div style="text-align:right">Per serve</div><div style="text-align:right">% w/w</div>
+            </div>
+            <sc-for list="{{ ingredients }}" as="i" hint-placeholder-count="13">
+              <div style="display:grid;grid-template-columns:minmax(0,2.2fr) 1.4fr 0.9fr 0.7fr;gap:14px;padding:11px 18px;border-bottom:1px solid #F1EEE9;font-size:12.5px;align-items:center">
+                <div style="font-weight:500;color: {{ i.fg }}">{{ i.name }}</div>
+                <div style="color:#7A8187">{{ i.fn }}</div>
+                <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color: {{ i.fg }}">{{ i.dose }}</div>
+                <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9AA0A5">{{ i.pct }}</div>
+              </div>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:minmax(0,2.2fr) 1.4fr 0.9fr 0.7fr;gap:14px;padding:13px 18px;font-size:12.5px;font-weight:600;background:#F8F7F4">
+              <div>Total per serve</div><div></div><div style="text-align:right;font-family:'IBM Plex Mono',monospace">14.5 g</div><div style="text-align:right;font-family:'IBM Plex Mono',monospace">100%</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Version history</div>
+            <div style="background:#fff;border:1px solid #E4E0D9">
+              <sc-for list="{{ versions }}" as="v" hint-placeholder-count="3">
+                <div style="padding:14px 16px;border-bottom:1px solid #F1EEE9;border-left:2px solid {{ v.rule }}">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500">{{ v.id }}</div>
+                    <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color: {{ v.color }}">{{ v.status }}</div>
+                  </div>
+                  <div style="font-size:12px;color:#5F666C;margin-top:6px;line-height:1.5">{{ v.note }}</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5;margin-top:6px">{{ v.date }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Specification</div>
+            <div style="background:#fff;border:1px solid #E4E0D9">
+              <sc-for list="{{ spec }}" as="f" hint-placeholder-count="7">
+                <div style="display:flex;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+                  <div style="color:#8A9096">{{ f.k }}</div><div style="font-weight:500;text-align:right">{{ f.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabSamples }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:26px;align-items:start">
+        <div>
+          <div style="background:#fff;border:1px solid #E4E0D9;display:flex;gap:22px;padding:20px;margin-bottom:20px;flex-wrap:wrap">
+            <div style="flex:0 0 168px"><image-slot id="anvil-sample-mango" shape="rect" style="width:168px;height:168px" placeholder="Sample sachet photo"></image-slot></div>
+            <div style="flex:1;min-width:240px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:20px">MANGO V2</div>
+                <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background:#F7EBE0;color:#B4622A">Awaiting your feedback</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 22px;margin-top:14px">
+                <sc-for list="{{ sampleFacts }}" as="f" hint-placeholder-count="8">
+                  <div style="display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+                    <div style="color:#8A9096">{{ f.k }}</div><div style="font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:12px">{{ f.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#fff;border:1px solid #E4E0D9;padding:22px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px">Flavour panel — rate 1 to 10</div>
+              <div style="font-size:11.5px;color:#9AA0A5">Grey marker shows your V1 score</div>
+            </div>
+            <sc-for list="{{ attrs }}" as="a" hint-placeholder-count="11">
+              <div style="display:grid;grid-template-columns:150px minmax(0,1fr) 34px;gap:16px;align-items:center;padding:9px 0;border-bottom:1px solid #F5F2ED">
+                <div style="font-size:12.5px;color:#3E454A">{{ a.label }}</div>
+                <div style="position:relative;display:flex;align-items:center">
+                  <div style="position:absolute;top:-3px;bottom:-3px;width:2px;background:#C9C4BA;left: {{ a.prevPos }}"></div>
+                  <input type="range" min="1" max="10" step="1" value="{{ a.value }}" onChange="{{ a.set }}" style="width:100%" />
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:right;font-weight:500;color: {{ a.tone }}">{{ a.value }}</div>
+              </div>
+            </sc-for>
+            <div style="margin-top:18px">
+              <div style="font-size:12.5px;color:#3E454A;margin-bottom:8px">Written feedback</div>
+              <textarea value="{{ feedback }}" onChange="{{ setFeedback }}" placeholder="Tell us what to change. Be specific — aftertaste, sweetness, aroma, how it mixed." style="width:100%;height:96px;border:1px solid #E4E0D9;background:#FAF9F6;padding:12px;font-size:13px;resize:vertical;outline:none"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap">
+              <button onClick="{{ submitSample }}" style="background:#B4622A;color:#fff;border:0;padding:12px 20px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#95501F">{{ sampleBtn }}</button>
+              <button style="background:transparent;color:#3E454A;border:1px solid #DCD7CF;padding:12px 20px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Request another sample</button>
+              <div style="font-size:12px;color:#8A9096">Saved automatically · due 29 Jul</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Sample history</div>
+          <div style="background:#fff;border:1px solid #E4E0D9">
+            <sc-for list="{{ sampleHistory }}" as="h" hint-placeholder-count="2">
+              <div style="padding:16px;border-bottom:1px solid #F1EEE9">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:14px">{{ h.id }}</div>
+                  <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color: {{ h.color }}">{{ h.status }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5;margin-top:5px">{{ h.date }}</div>
+                <div style="font-size:12px;color:#5F666C;margin-top:8px;line-height:1.55">{{ h.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabPackaging }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:16px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase">Packaging options — 1 kg tub</div>
+            <div style="font-size:12.5px;color:#5F666C;margin-top:7px">Per unit at 1,000 units, ex GST</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+          <sc-for list="{{ packs }}" as="p" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid {{ p.border }};border-top:3px solid {{ p.accent }};padding:18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color: {{ p.classColor }};font-weight:600">{{ p.klass }}</div>
+                <sc-if value="{{ p.isChosen }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;background:#E7F0E9;color:#2F7D4F;padding:3px 8px">Selected</div>
+                </sc-if>
+              </div>
+              <image-slot id="{{ p.slot }}" shape="rect" style="width:100%;height:180px" placeholder="{{ p.photo }}"></image-slot>
+              <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:16.5px;margin-top:14px">{{ p.name }}</div>
+              <div style="font-size:12.5px;color:#5F666C;margin-top:6px;line-height:1.5;min-height:38px">{{ p.blurb }}</div>
+              <div style="display:flex;align-items:baseline;gap:8px;margin-top:12px">
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:23px">{{ p.price }}</div>
+                <div style="font-size:12px;color:#8A9096">per unit · {{ p.lead }}</div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:14px">
+                <button onClick="{{ p.choose }}" style="flex:1;border:0;padding:10px;font-size:11px;letter-spacing:0.07em;text-transform:uppercase;font-weight:600;cursor:pointer;background: {{ p.btnBg }};color: {{ p.btnFg }}">{{ p.btnLabel }}</button>
+                <button style="border:1px solid #DCD7CF;background:transparent;padding:10px 12px;font-size:11px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Sample</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid #E4E0D9;overflow:hidden">
+          <sc-for list="{{ packRows }}" as="r" hint-placeholder-count="14">
+            <div style="display:grid;grid-template-columns:200px repeat(3,minmax(0,1fr));gap:16px;padding:11px 20px;border-bottom:1px solid #F1EEE9;font-size:12.5px;background: {{ r.bg }}">
+              <div style="color:#8A9096">{{ r.k }}</div>
+              <div style="font-weight: {{ r.w0 }}">{{ r.a }}</div>
+              <div style="font-weight: {{ r.w1 }}">{{ r.b }}</div>
+              <div style="font-weight: {{ r.w2 }}">{{ r.c }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabProduction }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <div style="display:flex;gap:8px;margin-bottom:18px">
+          <sc-for list="{{ jobs }}" as="j" hint-placeholder-count="2">
+            <button onClick="{{ j.go }}" style="border:1px solid {{ j.border }};background: {{ j.bg }};color: {{ j.fg }};padding:10px 16px;font-size:12.5px;cursor:pointer;text-align:left">
+              <div style="font-family:'Archivo',sans-serif;font-weight:600">{{ j.name }}</div>
+              <div style="font-size:11px;opacity:0.7;margin-top:3px">{{ j.sub }}</div>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start">
+          <div style="background:#fff;border:1px solid #E4E0D9">
+            <div style="padding:18px 22px;border-bottom:1px solid #E4E0D9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+              <div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:17px">{{ job.title }}</div>
+                <div style="font-size:12.5px;color:#5F666C;margin-top:5px">{{ job.subLine }}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">{{ job.dateLabel }}</div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:5px;color: {{ job.dateColor }}">{{ job.date }}</div>
+              </div>
+            </div>
+            <sc-for list="{{ prodStages }}" as="p" hint-placeholder-count="12">
+              <div style="display:grid;grid-template-columns:30px minmax(0,1fr) 170px;gap:14px;align-items:center;padding:13px 22px;border-bottom:1px solid #F1EEE9;background: {{ p.rowBg }}">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#B0B5B9">{{ p.num }}</div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:9px;height:9px;background: {{ p.dot }};border-radius:50%"></div>
+                  <div style="font-size:13.5px;font-weight: {{ p.weight }};color: {{ p.fg }}">{{ p.label }}</div>
+                </div>
+                <div style="text-align:right;font-size:11.5px;color: {{ p.metaColor }};font-family:'IBM Plex Mono',monospace">{{ p.meta }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Batch record</div>
+              <div style="background:#fff;border:1px solid #E4E0D9">
+                <sc-for list="{{ job.facts }}" as="f" hint-placeholder-count="8">
+                  <div style="display:flex;justify-content:space-between;gap:14px;padding:10px 16px;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+                    <div style="color:#8A9096">{{ f.k }}</div><div style="font-weight:500;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px">{{ f.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#14181B;color:#D6D2CB;padding:18px;font-size:12.5px;line-height:1.6">
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#fff;margin-bottom:9px">{{ job.noteTitle }}</div>
+              {{ job.note }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ tabDocs }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E4E0D9">
+        <div style="display:grid;grid-template-columns:minmax(0,2.4fr) 1.1fr 0.6fr 1fr 1fr 0.9fr;gap:14px;padding:11px 20px;background:#F8F7F4;border-bottom:1px solid #E4E0D9;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">
+          <div>Document</div><div>Type</div><div>Ver.</div><div>Uploaded by</div><div>Date</div><div style="text-align:right">Status</div>
+        </div>
+        <sc-for list="{{ projDocs }}" as="d" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:minmax(0,2.4fr) 1.1fr 0.6fr 1fr 1fr 0.9fr;gap:14px;padding:12px 20px;border-bottom:1px solid #F1EEE9;font-size:12.5px;align-items:center;cursor:pointer" style-hover="background:#FAF9F6">
+            <div style="font-weight:500">{{ d.name }}</div>
+            <div style="color:#7A8187">{{ d.type }}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#7A8187">{{ d.ver }}</div>
+            <div style="color:#7A8187">{{ d.by }}</div>
+            <div style="color:#7A8187;font-family:'IBM Plex Mono',monospace;font-size:11.5px">{{ d.date }}</div>
+            <div style="text-align:right"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background: {{ d.bg }};color: {{ d.color }}">{{ d.status }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+    <sc-if value="{{ isApprovals }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:24px;flex-wrap:wrap">
+      <div>
+        <h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:29px;letter-spacing:-0.02em;margin:0">Approvals</h1>
+        <p style="margin:7px 0 0 0;font-size:14px;color:#5F666C">Timestamped against a version, kept for the life of the product.</p>
+      </div>
+      <div style="display:flex;gap:1px;background:#E4E0D9;border:1px solid #E4E0D9">
+        <div style="background:#fff;padding:12px 18px">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Open</div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:22px;color: {{ openTone }};margin-top:4px">{{ openCount }}</div>
+        </div>
+        <div style="background:#fff;padding:12px 18px">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Avg. turnaround</div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:22px;margin-top:4px">1.4 days</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:34px">
+      <sc-for list="{{ approvals }}" as="a" hint-placeholder-count="3">
+        <div style="background:#fff;border:1px solid {{ a.border }}">
+          <div style="display:grid;grid-template-columns:210px minmax(0,1fr);gap:24px;padding:20px 22px">
+            <div><image-slot id="{{ a.slot }}" shape="rect" style="width:210px;height:150px" placeholder="{{ a.photo }}"></image-slot></div>
+            <div style="min-width:0;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#9AA0A5">{{ a.kind }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:#F1EEE9;padding:2px 6px">{{ a.version }}</div>
+                <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background: {{ a.pillBg }};color: {{ a.pillFg }}">{{ a.state }}</div>
+              </div>
+              <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:19px;margin-top:8px">{{ a.title }}</div>
+              <div style="font-size:13px;color:#5F666C;margin-top:8px;line-height:1.55;max-width:640px">{{ a.body }}</div>
+              <div style="display:flex;gap:26px;margin-top:14px;flex-wrap:wrap">
+                <sc-for list="{{ a.meta }}" as="m" hint-placeholder-count="3">
+                  <div>
+                    <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#9AA0A5">{{ m.k }}</div>
+                    <div style="font-size:12.5px;margin-top:4px;font-weight:500">{{ m.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex:1"></div>
+              <div style="display:flex;gap:9px;margin-top:18px;align-items:center;flex-wrap:wrap">
+                <button onClick="{{ a.approve }}" style="border:0;padding:11px 18px;font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;font-weight:600;cursor:pointer;background: {{ a.primaryBg }};color: {{ a.primaryFg }}" style-hover="opacity:0.9">{{ a.primaryLabel }}</button>
+                <sc-if value="{{ a.open }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;gap:9px;flex-wrap:wrap">
+                    <button onClick="{{ a.comment }}" style="border:1px solid #DCD7CF;background:transparent;padding:11px 18px;font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Approve with comments</button>
+                    <button onClick="{{ a.reject }}" style="border:1px solid #E3C8C1;background:transparent;color:#B4402A;padding:11px 18px;font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="background:#FBF3F1">Request changes</button>
+                    <button style="border:0;background:transparent;color:#7A8187;padding:11px 8px;font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;cursor:pointer" style-hover="color:#14181B">Download</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ a.settled }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:12.5px;color:#5F666C">{{ a.receipt }}</div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">Approval history</div>
+    <div style="background:#fff;border:1px solid #E4E0D9">
+      <div style="display:grid;grid-template-columns:minmax(0,2fr) 0.8fr 1.1fr 1.2fr 1fr;gap:14px;padding:11px 20px;background:#F8F7F4;border-bottom:1px solid #E4E0D9;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">
+        <div>Item</div><div>Version</div><div>Approved by</div><div>Timestamp</div><div style="text-align:right">Record</div>
+      </div>
+      <sc-for list="{{ approvalHistory }}" as="h" hint-placeholder-count="6">
+        <div style="display:grid;grid-template-columns:minmax(0,2fr) 0.8fr 1.1fr 1.2fr 1fr;gap:14px;padding:12px 20px;border-bottom:1px solid #F1EEE9;font-size:12.5px;align-items:center">
+          <div style="font-weight:500">{{ h.item }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#7A8187">{{ h.version }}</div>
+          <div style="color:#5F666C">{{ h.who }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#7A8187">{{ h.when }}</div>
+          <div style="text-align:right"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background:#F1EEE9;color:#5F666C">Locked</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+    <sc-if value="{{ isQuotes }}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start">
+    <div style="background:#fff;border:1px solid #E4E0D9">
+      <div style="padding:26px 30px;border-bottom:1px solid #E4E0D9;display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:24px;letter-spacing:-0.02em">Manufacturing quote</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7A8187;margin-top:7px">QTE-1042 · rev 2 · issued 2 Jul 2026</div>
+          <div style="font-size:13px;color:#5F666C;margin-top:12px;line-height:1.6">APEX PUMP — Mango · 1,000 units<br />NXT GEN LABS Pty Ltd · ABN 61 442 118 903</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Total incl. GST</div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:32px;letter-spacing:-0.02em;margin-top:6px">$20,031.00</div>
+          <div style="display:inline-block;margin-top:9px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 9px;background: {{ quotePillBg }};color: {{ quotePillFg }}">{{ quoteState }}</div>
+          <div style="font-size:12px;color:#8A9096;margin-top:9px">Valid until 15 Aug 2026</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,3fr) 0.8fr 1fr 1fr;gap:14px;padding:11px 30px;background:#F8F7F4;border-bottom:1px solid #E4E0D9;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">
+        <div>Line item</div><div style="text-align:right">Qty</div><div style="text-align:right">Unit</div><div style="text-align:right">Amount</div>
+      </div>
+      <sc-for list="{{ quoteLines }}" as="l" hint-placeholder-count="11">
+        <div style="display:grid;grid-template-columns:minmax(0,3fr) 0.8fr 1fr 1fr;gap:14px;padding:12px 30px;border-bottom:1px solid #F1EEE9;font-size:12.5px;align-items:baseline">
+          <div>
+            <div style="font-weight:500">{{ l.name }}</div>
+            <div style="font-size:11.5px;color:#8A9096;margin-top:3px">{{ l.note }}</div>
+          </div>
+          <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5F666C">{{ l.qty }}</div>
+          <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5F666C">{{ l.unit }}</div>
+          <div style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:500">{{ l.amount }}</div>
+        </div>
+      </sc-for>
+      <div style="padding:18px 30px;display:flex;justify-content:flex-end">
+        <div style="width:290px">
+          <sc-for list="{{ quoteTotals }}" as="t" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid {{ t.rule }}">
+              <div style="color: {{ t.fg }};font-weight: {{ t.weight }}">{{ t.k }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-weight: {{ t.weight }};color: {{ t.fg }}">{{ t.v }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="padding:20px 30px;background:#FAF9F6;border-top:1px solid #E4E0D9;font-size:12px;color:#5F666C;line-height:1.65">
+        <strong style="color:#14181B">Terms.</strong> 50% deposit to begin procurement, balance before dispatch. Pricing held for 30 days from issue. Development invoiced under QTE-1039 is credited above.
+      </div>
+      <div style="padding:20px 30px;border-top:1px solid #E4E0D9;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ acceptQuote }}" style="border:0;padding:12px 22px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer;background: {{ quoteBtnBg }};color: {{ quoteBtnFg }}">{{ quoteBtnLabel }}</button>
+        <button style="border:1px solid #DCD7CF;background:transparent;padding:12px 20px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Request changes</button>
+        <button style="border:1px solid #DCD7CF;background:transparent;padding:12px 20px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Download PDF</button>
+        <div style="font-size:12px;color:#8A9096;margin-left:auto">{{ quoteFoot }}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div>
+        <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px">All financial documents</div>
+        <div style="background:#fff;border:1px solid #E4E0D9">
+          <sc-for list="{{ financials }}" as="f" hint-placeholder-count="6">
+            <div style="padding:13px 16px;border-bottom:1px solid #F1EEE9;cursor:pointer" style-hover="background:#FAF9F6">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500">{{ f.id }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">{{ f.amount }}</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px">
+                <div style="font-size:12px;color:#7A8187">{{ f.label }}</div>
+                <div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color: {{ f.color }}">{{ f.status }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+    <sc-if value="{{ isDocs }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:20px;flex-wrap:wrap">
+      <div>
+        <h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:29px;letter-spacing:-0.02em;margin:0">Documents</h1>
+        <p style="margin:7px 0 0 0;font-size:14px;color:#5F666C">Versioned, dated, never deleted.</p>
+      </div>
+      <button style="background:#14181B;color:#fff;border:0;padding:11px 18px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#B4622A">Upload a file</button>
+    </div>
+    <div style="display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap">
+      <sc-for list="{{ docFilters }}" as="f" hint-placeholder-count="7">
+        <button onClick="{{ f.go }}" style="border:1px solid {{ f.border }};background: {{ f.bg }};color: {{ f.fg }};padding:7px 13px;font-size:12px;cursor:pointer">{{ f.label }}</button>
+      </sc-for>
+    </div>
+    <div style="background:#fff;border:1px solid #E4E0D9">
+      <div style="display:grid;grid-template-columns:minmax(0,2.4fr) 1.1fr 0.5fr 1.1fr 0.9fr 1fr 0.9fr;gap:14px;padding:11px 20px;background:#F8F7F4;border-bottom:1px solid #E4E0D9;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A9096">
+        <div>Document</div><div>Type</div><div>Ver.</div><div>Product</div><div>Batch</div><div>Date</div><div style="text-align:right">Status</div>
+      </div>
+      <sc-for list="{{ allDocs }}" as="d" hint-placeholder-count="14">
+        <div style="display:grid;grid-template-columns:minmax(0,2.4fr) 1.1fr 0.5fr 1.1fr 0.9fr 1fr 0.9fr;gap:14px;padding:12px 20px;border-bottom:1px solid #F1EEE9;font-size:12.5px;align-items:center;cursor:pointer" style-hover="background:#FAF9F6">
+          <div style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</div>
+          <div style="color:#7A8187">{{ d.type }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#7A8187">{{ d.ver }}</div>
+          <div style="color:#7A8187">{{ d.product }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#7A8187">{{ d.batch }}</div>
+          <div style="color:#7A8187;font-family:'IBM Plex Mono',monospace;font-size:11.5px">{{ d.date }}</div>
+          <div style="text-align:right"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;background: {{ d.bg }};color: {{ d.color }}">{{ d.status }}</span></div>
+        </div>
+      </sc-for>
+      <div style="padding:14px 20px;font-size:12px;color:#8A9096">{{ docCount }}</div>
+    </div>
+  </div>
+</sc-if>
+    <sc-if value="{{ isReorder }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="margin-bottom:22px">
+      <h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:29px;letter-spacing:-0.02em;margin:0">Reorder</h1>
+      <p style="margin:7px 0 0 0;font-size:14px;color:#5F666C">The second run should never be as much work as the first.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;align-items:start">
+      <div>
+        <div style="background:#fff;border:1px solid #E4E0D9;padding:22px;display:flex;gap:22px;margin-bottom:18px;flex-wrap:wrap">
+          <div style="flex:0 0 140px"><image-slot id="anvil-reorder-crea" shape="rect" style="width:140px;height:170px" placeholder="Finished product photo"></image-slot></div>
+          <div style="flex:1;min-width:250px">
+            <div style="display:flex;align-items:center;gap:11px;flex-wrap:wrap">
+              <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:23px;letter-spacing:-0.02em">CREA MONO</div>
+              <div style="font-size:15px;color:#7A8187">Unflavoured · 300 g</div>
+              <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background:#E7F0E9;color:#2F7D4F">Ready to reorder</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 22px;margin-top:14px">
+              <sc-for list="{{ reorderFacts }}" as="f" hint-placeholder-count="8">
+                <div style="display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+                  <div style="color:#8A9096">{{ f.k }}</div><div style="font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:12px">{{ f.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #E4E0D9;padding:22px;margin-bottom:18px">
+          <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-bottom:16px">What changes this time?</div>
+          <div style="margin-bottom:20px">
+            <div style="font-size:12.5px;color:#5F666C;margin-bottom:9px">Quantity</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-for list="{{ qtyOptions }}" as="q" hint-placeholder-count="4">
+                <button onClick="{{ q.go }}" style="border:1px solid {{ q.border }};background: {{ q.bg }};color: {{ q.fg }};padding:11px 18px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">{{ q.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <sc-for list="{{ reorderChoices }}" as="c" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:center;padding:13px 0;border-top:1px solid #F1EEE9">
+              <div>
+                <div style="font-size:13.5px;font-weight:500">{{ c.label }}</div>
+                <div style="font-size:12px;color:#8A9096;margin-top:3px">{{ c.note }}</div>
+              </div>
+              <div style="display:flex;gap:1px;background:#E4E0D9;border:1px solid #E4E0D9">
+                <sc-for list="{{ c.options }}" as="o" hint-placeholder-count="2">
+                  <button onClick="{{ o.go }}" style="flex:1;border:0;background: {{ o.bg }};color: {{ o.fg }};padding:9px 10px;font-size:11.5px;cursor:pointer">{{ o.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+          <div style="margin-top:18px">
+            <div style="font-size:12.5px;color:#5F666C;margin-bottom:8px">Special instructions</div>
+            <textarea placeholder="Anything different about this run — delivery window, carton marking, split delivery." style="width:100%;height:72px;border:1px solid #E4E0D9;background:#FAF9F6;padding:12px;font-size:13px;resize:vertical;outline:none"></textarea>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid #E4E0D9">
+          <div style="padding:16px 22px;border-bottom:1px solid #E4E0D9;display:flex;justify-content:space-between;align-items:center">
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px">Pre-flight check</div>
+          </div>
+          <sc-for list="{{ preflight }}" as="c" hint-placeholder-count="9">
+            <div style="display:grid;grid-template-columns:22px minmax(0,1fr) 210px;gap:14px;align-items:center;padding:11px 22px;border-bottom:1px solid #F1EEE9;font-size:12.5px">
+              <div style="color: {{ c.tone }};font-size:12px">{{ c.mark }}</div>
+              <div>{{ c.label }}</div>
+              <div style="text-align:right;color: {{ c.tone }};font-size:12px">{{ c.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position:sticky;top:88px;display:flex;flex-direction:column;gap:18px">
+        <div style="background:#14181B;color:#E9E6E0;padding:22px">
+          <div style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#8E959B">Indicative reorder</div>
+          <div style="display:flex;align-items:baseline;gap:9px;margin-top:9px">
+            <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:34px;letter-spacing:-0.02em">{{ reorderTotal }}</div>
+            <div style="font-size:12.5px;color:#9AA0A5">ex GST</div>
+          </div>
+          <div style="font-size:12.5px;color:#9AA0A5;margin-top:5px">{{ reorderUnit }} per unit · {{ reorderQty }} units</div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid #2A2F33">
+            <sc-for list="{{ reorderBreakdown }}" as="b" hint-placeholder-count="5">
+              <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px">
+                <div style="color:#9AA0A5">{{ b.k }}</div><div style="font-family:'IBM Plex Mono',monospace">{{ b.v }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:16px;font-size:12px;color:#9AA0A5;line-height:1.6">No development, sampling or artwork charges.</div>
+          <button onClick="{{ submitReorder }}" style="margin-top:18px;width:100%;background:#B4622A;color:#fff;border:0;padding:13px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#C97733">{{ reorderBtn }}</button>
+          <div style="margin-top:10px;font-size:11.5px;color:#8E959B;text-align:center">{{ reorderFoot }}</div>
+        </div>
+        <div style="background:#fff;border:1px solid #E4E0D9;padding:18px">
+          <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:11px">Earliest slot</div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:19px">14 August 2026</div>
+          <div style="font-size:12.5px;color:#5F666C;margin-top:6px;line-height:1.55">Powder Room 2 has capacity. Confirm within 5 days to hold the slot.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+    <sc-if value="{{ isMessages }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div style="margin-bottom:20px">
+      <h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:29px;letter-spacing:-0.02em;margin:0">Messages</h1>
+      <p style="margin:7px 0 0 0;font-size:14px;color:#5F666C">Attached to the project, not buried in an inbox.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:296px minmax(0,1fr);gap:20px;align-items:start">
+      <div style="background:#fff;border:1px solid #E4E0D9">
+        <sc-for list="{{ threads }}" as="t" hint-placeholder-count="3">
+          <div style="padding:15px 16px;border-bottom:1px solid #F1EEE9;border-left:2px solid {{ t.rule }};background: {{ t.bg }};cursor:pointer" style-hover="background:#FAF9F6">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+              <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13.5px">{{ t.title }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5">{{ t.when }}</div>
+            </div>
+            <div style="font-size:12px;color:#7A8187;margin-top:6px;line-height:1.5">{{ t.preview }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#fff;border:1px solid #E4E0D9;display:flex;flex-direction:column;min-height:560px">
+        <div style="padding:16px 22px;border-bottom:1px solid #E4E0D9;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px">APEX PUMP — Mango</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9AA0A5;margin-top:4px">ANV-2418 · Dana Whitmore, Priya Raman</div>
+          </div>
+        </div>
+        <div style="flex:1;padding:22px;display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ messages }}" as="m" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;flex-direction: {{ m.dir }}">
+              <div style="width:32px;height:32px;flex:0 0 32px;background: {{ m.avBg }};color: {{ m.avFg }};display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px">{{ m.initials }}</div>
+              <div style="max-width:600px">
+                <div style="display:flex;gap:9px;align-items:baseline;justify-content: {{ m.align }}">
+                  <div style="font-size:12.5px;font-weight:600">{{ m.who }}</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5">{{ m.when }}</div>
+                </div>
+                <div style="margin-top:7px;padding:13px 15px;background: {{ m.bg }};border:1px solid {{ m.border }};font-size:13px;line-height:1.6;color: {{ m.fg }}">{{ m.text }}</div>
+                <sc-if value="{{ m.attachment }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:7px;display:inline-flex;align-items:center;gap:9px;border:1px solid #E4E0D9;padding:8px 11px;font-size:12px;background:#fff">
+                    <span style="color:#B4622A">▤</span>{{ m.attachment }}
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border-top:1px solid #E4E0D9;padding:16px 22px">
+          <textarea value="{{ draft }}" onChange="{{ setDraft }}" placeholder="Reply to Dana — this stays attached to ANV-2418" style="width:100%;height:76px;border:1px solid #E4E0D9;background:#FAF9F6;padding:12px;font-size:13px;resize:vertical;outline:none"></textarea>
+          <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+            <button onClick="{{ send }}" style="background:#B4622A;color:#fff;border:0;padding:11px 20px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer" style-hover="background:#95501F">Send</button>
+            <button style="border:1px solid #DCD7CF;background:transparent;padding:11px 16px;font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#14181B">Attach file</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+  </main>
+</div>
+</div>
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;background:#1A1D20;display:flex;flex-direction:column;align-items:center;padding:34px 20px 60px 20px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+      <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.2em;color:#8E959B;text-transform:uppercase">Anvil Client Portal — mobile</div>
+      <button onClick="{{ setDesktop }}" style="border:1px solid #3A4045;background:transparent;color:#D6D2CB;padding:7px 13px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#B4622A;color:#fff">Back to desktop</button>
+    </div>
+    <div style="width:390px;height:812px;background:#F4F2EE;border:9px solid #0B0D0E;border-radius:38px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,0.5)">
+      <div style="height:40px;flex:0 0 40px;background:#101315;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:11.5px;font-family:'IBM Plex Mono',monospace">
+        <div>9:41</div><div style="display:flex;gap:6px"><span>●●●</span><span>▮</span></div>
+      </div>
+      <div style="flex:0 0 auto;background:#101315;color:#fff;padding:8px 18px 16px 18px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.14em">ANVIL</div>
+          <div style="font-size:10px;color:#8E959B;letter-spacing:0.12em;text-transform:uppercase;margin-top:3px">NXT GEN LABS</div>
+        </div>
+        <div style="width:32px;height:32px;background:#2A2F33;color:#E4DFD7;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px">MR</div>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;padding:18px 16px 26px 16px">
+        <sc-if value="{{ mHome }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-0.02em">Two things need you.</div>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-top:14px">
+              <sc-for list="{{ waiting }}" as="w" hint-placeholder-count="2">
+                <div style="background:#fff;border:1px solid #E4E0D9;border-top:2px solid #B4622A;padding:15px">
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#B4622A;letter-spacing:0.08em">{{ w.kind }}</div>
+                  <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:6px;line-height:1.3">{{ w.title }}</div>
+                  <div style="font-size:12px;color:#8A9096;margin-top:6px">{{ w.age }}</div>
+                  <button onClick="{{ w.go }}" style="margin-top:12px;width:100%;background:#14181B;color:#fff;border:0;padding:12px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer">{{ w.cta }}</button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:22px 0 10px 0">Your projects</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+                <div onClick="{{ p.mgo }}" style="background:#fff;border:1px solid #E4E0D9;padding:15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                    <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:15px">{{ p.name }}</div>
+                    <div style="font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 7px;background: {{ p.pillBg }};color: {{ p.pillFg }}">{{ p.stage }}</div>
+                  </div>
+                  <div style="font-size:12px;color:#7A8187;margin-top:5px">{{ p.variant }}</div>
+                  <div style="display:flex;align-items:center;gap:10px;margin-top:11px">
+                    <div style="flex:1;height:4px;background:#EEEBE5;position:relative">
+                      <div style="position:absolute;left:0;top:0;bottom:0;background: {{ p.barColor }};width: {{ p.pctW }}"></div>
+                    </div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5F666C">{{ p.pct }}%</div>
+                  </div>
+                  <div style="font-size:11.5px;color:#8A9096;margin-top:9px">Waiting on <span style="color: {{ p.waitColor }};font-weight:600">{{ p.waiting }}</span> · {{ p.window }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ mProject }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9AA0A5;letter-spacing:0.1em">ANV-2418</div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:800;font-size:24px;letter-spacing:-0.02em;margin-top:5px">APEX PUMP</div>
+            <div style="font-size:14px;color:#7A8187">Mango · 1,000 units</div>
+            <div style="display:flex;gap:2px;margin-top:14px">
+              <sc-for list="{{ miniStages }}" as="m" hint-placeholder-count="16">
+                <div style="flex:1;height:5px;background: {{ m.color }}"></div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border:1px solid #E4E0D9;margin-top:14px">
+              <div style="padding:13px 15px;border-bottom:1px solid #F1EEE9">
+                <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Current stage</div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:5px">Artwork approval</div>
+                <div style="font-size:12px;color:#B4622A;margin-top:3px">Waiting on you</div>
+              </div>
+              <div style="padding:13px 15px;border-bottom:1px solid #F1EEE9">
+                <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Estimated dispatch</div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:5px">4 – 11 Sep</div>
+                <div style="font-size:12px;color:#8A9096;margin-top:3px">Confirmed once scheduled</div>
+              </div>
+              <div style="padding:13px 15px">
+                <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#9AA0A5">Next update</div>
+                <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15px;margin-top:5px">Fri 31 Jul from Dana</div>
+              </div>
+            </div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:20px 0 10px 0">Timeline</div>
+            <div style="background:#fff;border:1px solid #E4E0D9">
+              <sc-for list="{{ stages }}" as="st" hint-placeholder-count="16">
+                <div style="display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid #F1EEE9;background: {{ st.rowBg }}">
+                  <div style="width:8px;height:8px;flex:0 0 8px;background: {{ st.dot }};border-radius:50%"></div>
+                  <div style="flex:1;font-size:12.5px;font-weight: {{ st.weight }};color: {{ st.fg }}">{{ st.label }}</div>
+                  <div style="font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color: {{ st.color }}">{{ st.status }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ mApprovals }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-0.02em">Approvals</div>
+            <div style="font-size:12.5px;color:#5F666C;margin-top:5px">Timestamped against a version, kept forever.</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:15px">
+              <sc-for list="{{ approvals }}" as="a" hint-placeholder-count="3">
+                <div style="background:#fff;border:1px solid {{ a.border }};padding:15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                    <div style="font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;color:#9AA0A5">{{ a.kind }} · {{ a.version }}</div>
+                    <div style="font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 7px;background: {{ a.pillBg }};color: {{ a.pillFg }}">{{ a.state }}</div>
+                  </div>
+                  <div style="font-family:'Archivo',sans-serif;font-weight:600;font-size:15.5px;margin-top:8px;line-height:1.3">{{ a.title }}</div>
+                  <div style="margin-top:11px"><image-slot id="{{ a.mslot }}" shape="rect" style="width:100%;height:130px" placeholder="{{ a.photo }}"></image-slot></div>
+                  <div style="font-size:12.5px;color:#5F666C;margin-top:11px;line-height:1.5">{{ a.body }}</div>
+                  <button onClick="{{ a.approve }}" style="margin-top:13px;width:100%;border:0;padding:13px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer;background: {{ a.primaryBg }};color: {{ a.primaryFg }}">{{ a.primaryLabel }}</button>
+                  <sc-if value="{{ a.open }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                      <button onClick="{{ a.comment }}" style="flex:1;border:1px solid #DCD7CF;background:transparent;padding:12px 6px;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">With comments</button>
+                      <button onClick="{{ a.reject }}" style="flex:1;border:1px solid #E3C8C1;background:transparent;color:#B4402A;padding:12px 6px;font-size:10.5px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">Request changes</button>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ a.settled }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:11.5px;color:#5F666C;margin-top:9px;line-height:1.5">{{ a.receipt }}</div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ mMessages }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-0.02em">APEX PUMP</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#9AA0A5;margin-top:4px">ANV-2418 · Dana, Priya</div>
+            <div style="display:flex;flex-direction:column;gap:13px;margin-top:16px">
+              <sc-for list="{{ messages }}" as="m" hint-placeholder-count="4">
+                <div>
+                  <div style="display:flex;gap:8px;align-items:baseline">
+                    <div style="font-size:12px;font-weight:600">{{ m.who }}</div>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#9AA0A5">{{ m.when }}</div>
+                  </div>
+                  <div style="margin-top:6px;padding:12px 13px;background: {{ m.bg }};border:1px solid {{ m.border }};font-size:12.5px;line-height:1.55;color: {{ m.fg }}">{{ m.text }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:8px">
+              <input placeholder="Reply to Dana" style="flex:1;border:1px solid #E4E0D9;background:#fff;padding:12px;font-size:13px;outline:none" />
+              <button style="background:#B4622A;color:#fff;border:0;padding:12px 16px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;cursor:pointer">Send</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="flex:0 0 auto;background:#101315;display:flex;padding:9px 6px 20px 6px">
+        <sc-for list="{{ mtabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.go }}" style="flex:1;background:transparent;border:0;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;color: {{ t.fg }}">
+            <div style="width:18px;height:2px;background: {{ t.rule }}"></div>
+            <div style="font-size:10.5px;letter-spacing:0.04em">{{ t.label }}</div>
+            <sc-if value="{{ t.badge }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;background:#B4622A;color:#fff;padding:1px 5px">{{ t.badge }}</div>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:980},&quot;role&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Client Owner&quot;,&quot;Client Team Member&quot;,&quot;Client Finance User&quot;],&quot;default&quot;:&quot;Client Owner&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Access&quot;,&quot;label&quot;:&quot;Signed-in role&quot;},&quot;formulaVisibility&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Full formula&quot;,&quot;Quantities hidden&quot;,&quot;Actives only&quot;],&quot;default&quot;:&quot;Full formula&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Access&quot;,&quot;label&quot;:&quot;Formula visibility&quot;}}">
+const C = {
+  ok: '#2F7D4F', info: '#2C6E9B', warn: '#B4622A', danger: '#B4402A', mute: '#6B7278',
+  okBg: '#E7F0E9', infoBg: '#E6EFF5', warnBg: '#F7EBE0', dangerBg: '#F7E7E3', muteBg: '#EFEDE8'
+};
+
+class Component extends DCLogic {
+  state = {
+    screen: 'dashboard',
+    tab: 'overview',
+    mobile: false,
+    mtab: 'home',
+    brandsOpen: false,
+    brand: 'NXT GEN LABS',
+    decisions: {},
+    shortlist: ['tub-b'],
+    chosen: 'tub-b',
+    ratings: { flavour: 8, sweet: 6, sour: 5, bitter: 4, after: 6, mouth: 7, aroma: 8, colour: 7, mix: 9, strength: 8, accept: 8 },
+    feedback: '',
+    job: 'apex',
+    qty: 2000,
+    quote: 'open',
+    docFilter: 'All',
+    draft: ''
+  };
+
+  go = (screen) => this.setState({ screen, brandsOpen: false });
+  setTab = (tab) => this.setState({ tab });
+
+  decide = (id, mode) => this.setState((s) => ({ decisions: { ...s.decisions, [id]: mode } }));
+
+  renderVals() {
+    const s = this.state;
+    const role = this.props.role ?? 'Client Owner';
+    const vis = this.props.formulaVisibility ?? 'Full formula';
+    const isFinance = role === 'Client Finance User';
+    const isTeam = role === 'Client Team Member';
+    const screen = (isTeam && s.screen === 'quotes') ? 'dashboard' : s.screen;
+    const pendingCount = 3 - Object.keys(s.decisions).length;
+
+    const nav = [
+      { id: 'dashboard', label: 'Dashboard' },
+      { id: 'project', label: 'Projects' },
+      { id: 'approvals', label: 'Approvals', badge: pendingCount > 0 ? String(pendingCount) : '' },
+      { id: 'quotes', label: 'Quotes & Invoices' },
+      { id: 'documents', label: 'Documents' },
+      { id: 'reorder', label: 'Reorders' },
+      { id: 'messages', label: 'Messages', badge: '1' }
+    ].filter((n) => !(isTeam && n.id === 'quotes')).map((n) => ({
+      ...n,
+      go: () => this.go(n.id),
+      bg: screen === n.id ? '#1B2023' : 'transparent',
+      fg: screen === n.id ? '#FFFFFF' : '#A7AEB3',
+      rule: screen === n.id ? '#B4622A' : 'transparent'
+    }));
+
+    const crumbs = {
+      dashboard: 'NXT GEN LABS / Dashboard',
+      project: 'NXT GEN LABS / Projects / ANV-2418 APEX PUMP',
+      approvals: 'NXT GEN LABS / Approvals',
+      quotes: 'NXT GEN LABS / Quotes & Invoices',
+      documents: 'NXT GEN LABS / Documents',
+      reorder: 'NXT GEN LABS / Reorders',
+      messages: 'NXT GEN LABS / Messages'
+    };
+
+    const stats = [
+      { label: 'Active projects', value: '3', note: '1 complete', tone: '#14181B' },
+      { label: 'Awaiting your approval', value: String(Math.max(pendingCount, 0)), note: pendingCount > 0 ? 'oldest 2 days' : 'all clear', tone: pendingCount > 0 ? C.warn : C.ok },
+      { label: 'In production', value: '1', note: 'QC underway', tone: '#14181B' },
+      { label: 'In procurement', value: '2', note: 'PO tracked', tone: '#14181B' },
+      { label: 'Outstanding', value: '$4,180', note: 'due 5 Aug', tone: '#14181B' }
+    ];
+
+    const waiting = [
+      { kind: 'APPROVAL REQUIRED', title: 'Label proof v3 — APEX PUMP Mango', meta: 'Kestrel Labels · 1kg tub wrap, 236 × 118 mm', age: 'Waiting 2 days · holds the print run', cta: 'Review', go: () => this.setState({ screen: 'approvals', mtab: 'approvals', brandsOpen: false }) },
+      { kind: 'FEEDBACK REQUESTED', title: 'Sample MANGO V2 — flavour panel', meta: 'Delivered 11 Jul · 11 attributes', age: 'Feedback due 29 Jul', cta: 'Rate sample', go: () => this.setState({ screen: 'project', tab: 'samples', mtab: 'project' }) }
+    ];
+
+    const rawProjects = [
+      { ref: 'ANV-2418', name: 'APEX PUMP', variant: 'Mango · 1,000 units', stage: 'Artwork approval', pct: 62, next: 'Approve label proof v3', waiting: 'You', updated: '2 hours ago', owner: 'Dana Whitmore', window: '4 – 11 Sep', windowLabel: 'Estimated dispatch', tone: 'warn' },
+      { ref: 'ANV-2402', name: 'HYDRA SALTS', variant: 'Watermelon · 2,500 units', stage: 'In production', pct: 88, next: 'Batch QC and filling', waiting: 'Anvil', updated: 'Yesterday', owner: 'Priya Raman', window: '12 – 15 Aug', windowLabel: 'Confirmed dispatch', tone: 'info' },
+      { ref: 'ANV-2431', name: 'NIGHT SHIFT', variant: 'Blackcurrant · 1,500 units', stage: 'Formula development', pct: 24, next: 'Formula v2 costing', waiting: 'Anvil', updated: '3 days ago', owner: 'Dana Whitmore', window: 'Q4 2026', windowLabel: 'Estimated window', tone: 'mute' },
+      { ref: 'ANV-2385', name: 'CREA MONO', variant: 'Unflavoured 300g · 2,000 units', stage: 'Complete', pct: 100, next: 'Available to reorder', waiting: '—', updated: '11 Jun', owner: 'Dana Whitmore', window: 'Delivered 6 Jun', windowLabel: 'Closed', tone: 'ok' }
+    ];
+    const projects = rawProjects.map((p) => ({
+      ...p,
+      pctW: p.pct + '%',
+      pillBg: { warn: C.warnBg, info: C.infoBg, ok: C.okBg, mute: C.muteBg }[p.tone],
+      pillFg: { warn: C.warn, info: C.info, ok: C.ok, mute: C.mute }[p.tone],
+      barColor: p.tone === 'ok' ? C.ok : p.tone === 'warn' ? C.warn : p.tone === 'info' ? C.info : '#B9BDC1',
+      waitColor: p.waiting === 'You' ? C.warn : '#5F666C',
+      go: () => this.setState({ screen: 'project', tab: 'overview' }),
+      mgo: () => this.setState({ mtab: 'project' })
+    }));
+
+    const activity = [
+      { text: 'Label proof v3 uploaded by Kestrel Labels and sent for your approval.', when: 'Today 08:14', ref: 'ANV-2418', tone: C.warn },
+      { text: 'Purchase order PO-3391 raised for 1,050 black 1kg tubs, lids and scoops.', when: 'Yesterday 16:40', ref: 'ANV-2418', tone: C.info },
+      { text: 'Formula APEX PUMP v3 approved and locked. Version history preserved.', when: '14 Jul', ref: 'ANV-2418', tone: C.ok },
+      { text: 'Sample MANGO V2 dispatched — tracking AUS-8841207.', when: '9 Jul', ref: 'ANV-2418', tone: C.info },
+      { text: 'HYDRA SALTS batch B-26-0788 manufactured. QC checks underway.', when: '8 Jul', ref: 'ANV-2402', tone: C.info },
+      { text: 'Deposit invoice INV-2091 paid in full. Thank you.', when: '2 Jul', ref: 'ANV-2418', tone: C.ok }
+    ];
+
+    const tabDefs = [
+      { id: 'overview', label: 'Overview' },
+      { id: 'formula', label: 'Formula' },
+      { id: 'samples', label: 'Samples & flavour' },
+      { id: 'packaging', label: 'Packaging' },
+      { id: 'production', label: 'Production' },
+      { id: 'docs', label: 'Documents' }
+    ].filter((t) => !(isFinance && (t.id === 'formula' || t.id === 'samples'))).map((t) => ({
+      ...t,
+      go: () => this.setTab(t.id),
+      rule: s.tab === t.id ? '#B4622A' : 'transparent',
+      fg: s.tab === t.id ? '#14181B' : '#7A8187',
+      weight: s.tab === t.id ? '600' : '400'
+    }));
+    const effTab = tabDefs.some((t) => t.id === s.tab) ? s.tab : 'overview';
+
+    const stageList = [
+      ['Initial enquiry', 'done'], ['Discovery & briefing', 'done'], ['Scope & quotation', 'done'],
+      ['Deposit & onboarding', 'done'], ['Formula development', 'done'], ['Sample development', 'done'],
+      ['Flavour & performance testing', 'client'], ['Formula approval', 'done'],
+      ['Ingredient & packaging procurement', 'active'], ['Artwork & label approval', 'client'],
+      ['Production scheduling', 'next'], ['Manufacturing', 'next'], ['Quality control', 'next'],
+      ['Filling & packaging', 'next'], ['Dispatch', 'next'], ['Reorder & ongoing support', 'next']
+    ];
+    const stageStyle = {
+      done: { status: 'Completed', color: C.ok, bg: C.okBg, dot: C.ok, fg: '#3E454A', weight: '400', rowBg: '#fff' },
+      active: { status: 'In progress', color: C.info, bg: C.infoBg, dot: C.info, fg: '#14181B', weight: '600', rowBg: '#fff' },
+      client: { status: 'Awaiting you', color: C.warn, bg: C.warnBg, dot: C.warn, fg: '#14181B', weight: '600', rowBg: '#FDFAF6' },
+      next: { status: 'Not started', color: C.mute, bg: C.muteBg, dot: '#D2CDC4', fg: '#9AA0A5', weight: '400', rowBg: '#fff' }
+    };
+    const stages = stageList.map((x, i) => ({
+      num: String(i + 1).padStart(2, '0'), label: x[0], ...stageStyle[x[1]]
+    }));
+    const miniStages = stageList.map((x) => ({
+      label: x[0],
+      color: x[1] === 'done' ? C.ok : x[1] === 'active' ? C.info : x[1] === 'client' ? C.warn : '#E4E0D9'
+    }));
+
+    const scope = [
+      ['Formula development', 1], ['Flavour development & masking', 1], ['Ingredient procurement', 1],
+      ['Packaging procurement', 1], ['Label design & printing', 1], ['Manufacturing & filling', 1],
+      ['Quality documentation', 1], ['Freight coordination', 1], ['Warehousing beyond 30 days', 0]
+    ].map((x) => ({
+      label: x[0], mark: x[1] ? '●' : '○',
+      tone: x[1] ? C.ok : '#C4C0B8', fg: x[1] ? '#3E454A' : '#A5AAAE'
+    }));
+
+    const facts = [
+      { k: 'Category', v: 'Pre-workout powder' }, { k: 'Order quantity', v: '1,000 units' },
+      { k: 'Fill', v: '435 g · 30 serves' }, { k: 'Packaging', v: '1 kg black tub' },
+      { k: 'Label', v: 'Custom · 236 × 118 mm' }, { k: 'Formula ownership', v: 'NXT GEN LABS' },
+      { k: 'Target launch', v: 'Late September' }, { k: 'Account manager', v: 'Dana Whitmore' }
+    ];
+
+    const ing = [
+      ['L-Citrulline Malate 2:1', 'Pump / blood flow', '6,000 mg', '41.4%'],
+      ['Beta-Alanine', 'Muscular endurance', '3,200 mg', '22.1%'],
+      ['Betaine Anhydrous', 'Power output', '2,500 mg', '17.2%'],
+      ['L-Tyrosine', 'Focus', '1,000 mg', '6.9%'],
+      ['Alpha-GPC 50%', 'Mind–muscle', '600 mg', '4.1%'],
+      ['Caffeine Anhydrous', 'Stimulant', '250 mg', '1.7%'],
+      ['L-Theanine', 'Stimulant smoothing', '200 mg', '1.4%'],
+      ['Himalayan pink salt', 'Electrolyte', '200 mg', '1.4%'],
+      ['AstraGin®', 'Absorption', '50 mg', '0.3%'],
+      ['Anvil flavour & masking system AM-114', 'Mango · bitterness masking', 'Withheld', '2.6%'],
+      ['Anvil sweetener system SW-06', 'Sucralose / Ace-K blend', 'Withheld', '0.6%'],
+      ['Anvil acid system AC-02', 'Malic / citric', 'Withheld', '0.2%'],
+      ['Silicon dioxide', 'Anti-caking', '30 mg', '0.2%']
+    ].map((r) => ({ name: r[0], fn: r[1], dose: r[2], pct: r[3], fg: r[2] === 'Withheld' ? '#9AA0A5' : '#14181B' }));
+    const isSystem = (r) => r.name.indexOf('Anvil ') === 0;
+    let ingredients = ing;
+    let formulaNote = 'You own this formula, so every active and its exact dose is visible to you. The mango flavour and bitterness-masking system is Anvil intellectual property and is shown as a single line.';
+    if (vis === 'Quantities hidden') {
+      ingredients = ing.map((r) => ({ ...r, dose: '—', pct: '—', fg: '#9AA0A5' }));
+      formulaNote = 'Your agreement lists the full ingredient deck without doses. Exact quantities stay with Anvil until formula ownership transfers.';
+    } else if (vis === 'Actives only') {
+      ingredients = ing.filter((r) => !isSystem(r) && r.name !== 'Silicon dioxide')
+        .concat([{ name: 'Flavour, sweetener, acid and processing aids', fn: 'Anvil systems', dose: 'Not disclosed', pct: '—', fg: '#9AA0A5' }]);
+      formulaNote = 'This is an Anvil-owned formula. Actives and their doses are disclosed so you can market the product accurately; the balance of the deck stays confidential.';
+    }
+
+    const versions = [
+      { id: 'v3', status: 'Approved', color: C.ok, rule: C.ok, note: 'Caffeine reduced to 250 mg, theanine added, masking system moved to AM-114.', date: 'Approved 14 Jul 2026' },
+      { id: 'v2', status: 'Superseded', color: C.mute, rule: '#E4E0D9', note: 'Beta-alanine raised to 3,200 mg after your feedback on the V1 sample.', date: '28 Jun 2026' },
+      { id: 'v1', status: 'Superseded', color: C.mute, rule: '#E4E0D9', note: 'First development formula built from your brief and target retail price.', date: '11 Jun 2026' }
+    ];
+
+    const spec = [
+      { k: 'Serve size', v: '14.5 g' }, { k: 'Serves per unit', v: '30' },
+      { k: 'Flavour', v: 'Mango (AM-114)' }, { k: 'Colour system', v: 'Natural beta-carotene' },
+      { k: 'Allergens', v: 'None declared' }, { k: 'Vegan', v: 'Yes' },
+      { k: 'Shelf life target', v: '24 months' }
+    ];
+
+    const attrDefs = [
+      ['flavour', 'Overall flavour', 6], ['sweet', 'Sweetness', 8], ['sour', 'Sourness', 4],
+      ['bitter', 'Bitterness', 7], ['after', 'Aftertaste', 4], ['mouth', 'Mouthfeel', 6],
+      ['aroma', 'Aroma', 7], ['colour', 'Colour', 7], ['mix', 'Mixability', 8],
+      ['strength', 'Perceived strength', 7], ['accept', 'Overall acceptance', 6]
+    ];
+    const attrs = attrDefs.map((a) => {
+      const v = s.ratings[a[0]];
+      return {
+        key: a[0], label: a[1], value: v,
+        prevPos: (((a[2] - 1) / 9) * 100).toFixed(1) + '%',
+        tone: v >= 8 ? C.ok : v <= 4 ? C.warn : '#14181B',
+        set: (e) => this.setState((st) => ({ ratings: { ...st.ratings, [a[0]]: Number(e.target.value) } }))
+      };
+    });
+
+    const packDefs = [
+      { id: 'tub-a', klass: 'Anvil Standard', name: 'Matte black 1 kg PET', slot: 'anvil-pack-a', photo: 'Black PET tub photo', blurb: 'Anvil core stock. No tooling, 500-unit minimum.', price: '$1.84', lead: '2 weeks', accent: '#5F666C' },
+      { id: 'tub-b', klass: 'Anvil Standard +', name: 'Soft-touch black HDPE', slot: 'anvil-pack-b', photo: 'Soft-touch HDPE tub photo', blurb: 'Heavier wall, soft-touch finish, recessed lid.', price: '$2.36', lead: '4 weeks', accent: '#B4622A' },
+      { id: 'tub-c', klass: 'Anvil Custom', name: 'Embossed lid, custom mould', slot: 'anvil-pack-c', photo: 'Custom embossed tub photo', blurb: 'Logo embossed into the lid. Owned tooling.', price: '$2.05', lead: '9 – 11 weeks', accent: '#2C6E9B' }
+    ];
+    const packs = packDefs.map((p) => {
+      const chosen = s.chosen === p.id;
+      return {
+        ...p, isChosen: chosen,
+        border: chosen ? '#2F7D4F' : '#E4E0D9',
+        classColor: p.klass === 'Anvil Custom' ? C.info : C.warn,
+        btnBg: chosen ? '#E7F0E9' : '#14181B',
+        btnFg: chosen ? '#2F7D4F' : '#fff',
+        btnLabel: chosen ? 'Approved' : 'Approve this option',
+        choose: () => this.setState({ chosen: p.id })
+      };
+    });
+    const packRowDefs = [
+      ['Classification', 'Anvil Standard', 'Anvil Standard +', 'Anvil Custom'],
+      ['Material', 'PET, 1 kg', 'HDPE, 1 kg', 'HDPE, 1 kg'],
+      ['Dimensions', '120 × 155 mm', '124 × 152 mm', '124 × 152 mm'],
+      ['Colour', 'Matte black', 'Soft-touch black', 'Matte black, custom'],
+      ['Closure', '120 mm screw lid', '120 mm recessed lid', 'Embossed screw lid'],
+      ['Scoop', '14.5 g, black', '14.5 g, black', '14.5 g, custom colour'],
+      ['Induction seal', 'Included', 'Included', 'Included'],
+      ['MOQ', '500', '1,000', '3,000'],
+      ['Unit cost at 1,000', '$1.84', '$2.36', '$2.05'],
+      ['Tooling', 'None', 'None', '$1,450 one-off'],
+      ['Lead time', '2 weeks (in stock)', '4 weeks', '9 – 11 weeks'],
+      ['Freight estimate', 'Included', 'Included', '$680 sea freight'],
+      ['Sample status', 'Available now', 'Sent 3 Jul', 'On request'],
+      ['Sustainability', 'Recyclable #1', 'Recyclable #2', 'Recyclable #2']
+    ];
+    const packRows = packRowDefs.map((r, i) => ({
+      k: r[0], a: r[1], b: r[2], c: r[3],
+      bg: i % 2 ? '#FCFBF9' : '#fff',
+      w0: s.chosen === 'tub-a' ? '600' : '400',
+      w1: s.chosen === 'tub-b' ? '600' : '400',
+      w2: s.chosen === 'tub-c' ? '600' : '400'
+    }));
+
+    const jobDefs = {
+      apex: {
+        name: 'APEX PUMP — Mango', sub: 'ANV-2418 · not yet scheduled',
+        title: 'Production job PJ-4471', subLine: 'APEX PUMP Mango · 435 kg batch · 1,000 units',
+        dateLabel: 'Estimated production', date: '25 – 29 Aug', dateColor: C.warn, current: 3,
+        noteTitle: 'Why this is not confirmed yet',
+        note: 'Two of eleven raw materials are in transit and the label proof is awaiting approval. Once both clear, the window becomes a locked slot.',
+        facts: [
+          { k: 'Job number', v: 'PJ-4471' }, { k: 'Formula', v: 'v3 (locked)' },
+          { k: 'Packaging', v: 'Soft-touch HDPE' }, { k: 'Label', v: 'v3 — pending' },
+          { k: 'Batch size', v: '435 kg' }, { k: 'Units', v: '1,000' },
+          { k: 'Room', v: 'Powder Room 2' }, { k: 'Retained samples', v: '3 × 100 g' }
+        ],
+        meta: ['Completed 18 Jul', 'Completed 21 Jul', 'Completed 24 Jul', '9 of 11 received', 'Pending materials', 'Pending', 'Pending', 'Pending', 'Pending', 'Pending', 'Pending', 'Pending']
+      },
+      hydra: {
+        name: 'HYDRA SALTS — Watermelon', sub: 'ANV-2402 · in production',
+        title: 'Production job PJ-4402', subLine: 'HYDRA SALTS Watermelon · 2,500 units',
+        dateLabel: 'Confirmed dispatch', date: '12 – 15 Aug', dateColor: C.ok, current: 8,
+        noteTitle: 'On track',
+        note: 'Batch B-26-0788 manufactured 8 July, passed in-process checks. Filling starts Thursday.',
+        facts: [
+          { k: 'Job number', v: 'PJ-4402' }, { k: 'Batch', v: 'B-26-0788' },
+          { k: 'Formula', v: 'v2 (locked)' }, { k: 'Packaging', v: '5 g stick sachet' },
+          { k: 'Batch size', v: '187 kg' }, { k: 'Units', v: '2,500' },
+          { k: 'Yield', v: '99.2%' }, { k: 'Room', v: 'Powder Room 1' }
+        ],
+        meta: ['Completed 24 Jun', 'Completed 26 Jun', 'Completed 1 Jul', 'Completed 2 Jul', 'Confirmed 3 Jul', 'Completed 8 Jul', 'Completed 8 Jul', 'In progress', 'Starts 30 Jul', 'Pending', 'Pending', 'Pending']
+      }
+    };
+    const job = jobDefs[s.job];
+    const prodLabels = ['Production date being confirmed', 'Materials allocated', 'Materials received', 'Pre-production quality checks', 'Production scheduled', 'Manufacturing started', 'Manufacturing completed', 'Quality checks underway', 'Filling & packaging', 'Final inspection', 'Ready for dispatch', 'Dispatched'];
+    const prodStages = prodLabels.map((label, i) => {
+      const st = i < job.current ? 'done' : i === job.current ? 'active' : 'next';
+      return {
+        num: String(i + 1).padStart(2, '0'), label,
+        dot: st === 'done' ? C.ok : st === 'active' ? C.info : '#D2CDC4',
+        fg: st === 'next' ? '#9AA0A5' : st === 'active' ? '#14181B' : '#3E454A',
+        weight: st === 'active' ? '600' : '400',
+        rowBg: st === 'active' ? '#F6FAFC' : '#fff',
+        meta: job.meta[i], metaColor: st === 'next' ? '#B0B5B9' : '#7A8187'
+      };
+    });
+    const jobs = ['apex', 'hydra'].map((k) => ({
+      name: jobDefs[k].name, sub: jobDefs[k].sub, go: () => this.setState({ job: k }),
+      bg: s.job === k ? '#14181B' : '#fff', fg: s.job === k ? '#fff' : '#3E454A',
+      border: s.job === k ? '#14181B' : '#E4E0D9'
+    }));
+
+    const docStyle = { current: { bg: C.okBg, color: C.ok, status: 'Current' }, pending: { bg: C.warnBg, color: C.warn, status: 'Awaiting you' }, super: { bg: C.muteBg, color: C.mute, status: 'Superseded' } };
+    const projDocs = [
+      ['APEX PUMP Mango — label proof v3.pdf', 'Label proof', 'v3', 'Kestrel Labels', '27 Jul 2026', 'pending'],
+      ['APEX PUMP formula specification v3.pdf', 'Formula spec', 'v3', 'Anvil — Formulation', '14 Jul 2026', 'current'],
+      ['Quote QTE-1042.pdf', 'Quote', 'v2', 'Anvil — Accounts', '2 Jul 2026', 'current'],
+      ['Deposit invoice INV-2091.pdf', 'Invoice', 'v1', 'Anvil — Accounts', '2 Jul 2026', 'current'],
+      ['Citrulline malate COA — lot CM2604.pdf', 'Ingredient COA', 'v1', 'Anvil — Quality', '19 Jul 2026', 'current'],
+      ['Beta-alanine COA — lot BA1188.pdf', 'Ingredient COA', 'v1', 'Anvil — Quality', '19 Jul 2026', 'current'],
+      ['Tub & lid packaging specification.pdf', 'Packaging spec', 'v2', 'Anvil — Procurement', '10 Jul 2026', 'current'],
+      ['APEX PUMP Mango — label proof v2.pdf', 'Label proof', 'v2', 'Kestrel Labels', '18 Jul 2026', 'super']
+    ].map((d) => ({ name: d[0], type: d[1], ver: d[2], by: d[3], date: d[4], ...docStyle[d[5]] }));
+
+    const approvalDefs = [
+      {
+        id: 'artwork', kind: 'Label artwork', version: 'v3', slot: 'anvil-approve-artwork',
+        photo: 'Label proof artwork', title: 'Printed label proof — APEX PUMP Mango',
+        body: 'Press proof on the final matte stock and die line. Check barcode, nutrition panel and mandatory statements.',
+        meta: [{ k: 'Requested', v: '27 Jul, 08:14' }, { k: 'Die line', v: '236 × 118 mm' }, { k: 'Holds', v: 'Print run + production date' }]
+      },
+      {
+        id: 'packaging', kind: 'Packaging', version: 'Option B', slot: 'anvil-approve-pack',
+        photo: 'Soft-touch tub sample', title: 'Soft-touch black HDPE tub and lid',
+        body: 'Confirmed against the 435 g fill with 12% headroom. Sample couriered 3 July.',
+        meta: [{ k: 'Requested', v: '24 Jul, 15:02' }, { k: 'Unit cost', v: '$2.36 at 1,000' }, { k: 'Lead time', v: '4 weeks' }]
+      },
+      {
+        id: 'freight', kind: 'Freight quote', version: 'FRT-0771', slot: 'anvil-approve-freight',
+        photo: 'Palletised finished goods', title: 'Palletised delivery to Truganina, VIC',
+        body: 'One pallet, 1,000 units, tail-lift delivery to your 3PL.',
+        meta: [{ k: 'Requested', v: '22 Jul, 11:30' }, { k: 'Cost', v: '$340 ex GST' }, { k: 'Transit', v: '2 business days' }]
+      }
+    ];
+    const decisionCopy = {
+      approved: { state: 'Approved', pillBg: C.okBg, pillFg: C.ok, receipt: 'Approved by Marcus Reid · 27 Jul 2026, 09:41 AEST · recorded against this version', primaryBg: '#E7F0E9', primaryFg: C.ok, primaryLabel: 'Approved' },
+      commented: { state: 'Approved with comments', pillBg: C.okBg, pillFg: C.ok, receipt: 'Approved with comments by Marcus Reid · 27 Jul 2026, 09:41 AEST', primaryBg: '#E7F0E9', primaryFg: C.ok, primaryLabel: 'Approved with comments' },
+      changes: { state: 'Changes requested', pillBg: C.dangerBg, pillFg: C.danger, receipt: 'Changes requested by Marcus Reid · 27 Jul 2026, 09:41 AEST · Dana has been notified', primaryBg: '#F7E7E3', primaryFg: C.danger, primaryLabel: 'Changes requested' }
+    };
+    const approvals = approvalDefs.map((a) => {
+      const d = s.decisions[a.id];
+      const c = d ? decisionCopy[d] : null;
+      return {
+        ...a,
+        mslot: 'm-' + a.slot,
+        open: !d, settled: !!d,
+        state: c ? c.state : 'Awaiting you',
+        pillBg: c ? c.pillBg : C.warnBg, pillFg: c ? c.pillFg : C.warn,
+        border: d ? '#E4E0D9' : '#DCC7B2',
+        primaryBg: c ? c.primaryBg : '#B4622A', primaryFg: c ? c.primaryFg : '#fff',
+        primaryLabel: c ? c.primaryLabel : 'Approve',
+        receipt: c ? c.receipt : '',
+        approve: () => { if (!d) this.decide(a.id, 'approved'); },
+        comment: () => this.decide(a.id, 'commented'),
+        reject: () => this.decide(a.id, 'changes')
+      };
+    });
+    const approvalHistory = [
+      { item: 'Formula APEX PUMP — Mango', version: 'v3', who: 'Marcus Reid', when: '14 Jul 2026, 16:22' },
+      { item: 'Flavour sample MANGO V1 — rejected', version: 'MNG-V1', who: 'Marcus Reid', when: '26 Jun 2026, 10:05' },
+      { item: 'Label die line and dimensions', version: 'v1', who: 'Marcus Reid', when: '21 Jun 2026, 09:14' },
+      { item: 'Project scope and quotation', version: 'QTE-1042 v2', who: 'Marcus Reid', when: '02 Jul 2026, 13:47' },
+      { item: 'HYDRA SALTS production sample', version: 'PS-2402', who: 'Elena Cho', when: '01 Jul 2026, 11:58' },
+      { item: 'CREA MONO label artwork', version: 'v2', who: 'Marcus Reid', when: '14 May 2026, 15:30' }
+    ];
+
+    const quoteLines = [
+      ['Formula development — custom pre-workout', 'Three actives benchmarked, two revisions included', '1', '$1,450.00', '$1,450.00'],
+      ['Flavour development & masking', 'Mango, two iterations, AM-114 system', '1', '$680.00', '$680.00'],
+      ['Sample production', 'Three sachets per iteration, freight included', '6', '$40.00', '$240.00'],
+      ['Ingredient procurement', 'Eleven raw materials, COAs collected', '1,000', '$6.42', '$6,420.00'],
+      ['Packaging procurement', 'Soft-touch HDPE tub, lid, scoop, induction seal', '1,000', '$2.84', '$2,840.00'],
+      ['Label design', 'Front, back and die line artwork', '1', '$520.00', '$520.00'],
+      ['Label printing', 'Roll labels, matte laminate, 5% overs', '1,050', '$0.39', '$409.50'],
+      ['Manufacturing', '435 kg batch, powder blending, Room 2', '1', '$3,150.00', '$3,150.00'],
+      ['Filling, sealing, scooping & labelling', 'Per finished unit', '1,000', '$1.90', '$1,900.00'],
+      ['Quality documentation & retained samples', 'Batch record, COAs, 3 retained samples', '1', '$260.00', '$260.00'],
+      ['Freight — one pallet to Truganina VIC', 'Tail lift, two-hour window', '1', '$340.00', '$340.00']
+    ].map((l) => ({ name: l[0], note: l[1], qty: l[2], unit: l[3], amount: l[4] }));
+    const quoteTotals = [
+      { k: 'Subtotal', v: '$18,209.50', fg: '#5F666C', weight: '400', rule: '#F1EEE9' },
+      { k: 'Development credit — QTE-1039', v: '−$390.00', fg: '#2F7D4F', weight: '400', rule: '#F1EEE9' },
+      { k: 'GST 10%', v: '$1,781.95', fg: '#5F666C', weight: '400', rule: '#F1EEE9' },
+      { k: 'Total incl. GST', v: '$19,601.45', fg: '#14181B', weight: '600', rule: '#14181B' }
+    ];
+    const financials = [
+      { id: 'QTE-1042', label: 'Manufacturing quote — APEX PUMP', amount: '$19,601.45', status: s.quote === 'accepted' ? 'Accepted' : 'Awaiting you', color: s.quote === 'accepted' ? C.ok : C.warn },
+      { id: 'INV-2091', label: 'Deposit invoice — 50%', amount: '$9,800.73', status: 'Paid 2 Jul', color: C.ok },
+      { id: 'INV-2104', label: 'Packaging procurement — HYDRA', amount: '$4,180.00', status: 'Due 5 Aug', color: C.warn },
+      { id: 'QTE-1039', label: 'Development quote — APEX PUMP', amount: '$2,370.00', status: 'Closed', color: C.mute },
+      { id: 'INV-1988', label: 'CREA MONO production run', amount: '$9,240.00', status: 'Paid 12 Jun', color: C.ok },
+      { id: 'CRD-0114', label: 'Credit — short-filled units', amount: '$212.00', status: 'Applied', color: C.ok }
+    ];
+
+    const docRows = [
+      ['APEX PUMP Mango — label proof v3.pdf', 'Label proof', 'v3', 'APEX PUMP', '—', '27 Jul 2026', 'pending'],
+      ['APEX PUMP formula specification v3.pdf', 'Formula spec', 'v3', 'APEX PUMP', '—', '14 Jul 2026', 'current'],
+      ['Quote QTE-1042.pdf', 'Quote', 'v2', 'APEX PUMP', '—', '02 Jul 2026', 'current'],
+      ['Deposit invoice INV-2091.pdf', 'Invoice', 'v1', 'APEX PUMP', '—', '02 Jul 2026', 'current'],
+      ['Citrulline malate COA — lot CM2604.pdf', 'Ingredient COA', 'v1', 'APEX PUMP', '—', '19 Jul 2026', 'current'],
+      ['Beta-alanine COA — lot BA1188.pdf', 'Ingredient COA', 'v1', 'APEX PUMP', '—', '19 Jul 2026', 'current'],
+      ['Tub & lid packaging specification.pdf', 'Packaging spec', 'v2', 'APEX PUMP', '—', '10 Jul 2026', 'current'],
+      ['HYDRA SALTS batch record B-26-0788.pdf', 'Batch record', 'v1', 'HYDRA SALTS', 'B-26-0788', '08 Jul 2026', 'current'],
+      ['HYDRA SALTS finished product report.pdf', 'Test report', 'v1', 'HYDRA SALTS', 'B-26-0788', '10 Jul 2026', 'current'],
+      ['HYDRA SALTS formula specification v2.pdf', 'Formula spec', 'v2', 'HYDRA SALTS', '—', '02 May 2026', 'current'],
+      ['CREA MONO batch record B-24-0611.pdf', 'Batch record', 'v1', 'CREA MONO', 'B-24-0611', '11 Jun 2026', 'current'],
+      ['CREA MONO creatine COA — lot CR9921.pdf', 'Ingredient COA', 'v1', 'CREA MONO', 'B-24-0611', '28 May 2026', 'current'],
+      ['CREA MONO label artwork v2.ai', 'Artwork', 'v2', 'CREA MONO', '—', '14 May 2026', 'current'],
+      ['Retained sample register 2026.pdf', 'Retained samples', 'v6', 'All products', '—', '01 Jul 2026', 'current'],
+      ['APEX PUMP Mango — label proof v2.pdf', 'Label proof', 'v2', 'APEX PUMP', '—', '18 Jul 2026', 'super']
+    ].map((d) => ({ name: d[0], type: d[1], ver: d[2], product: d[3], batch: d[4], date: d[5], ...docStyle[d[6]] }));
+    const filterList = ['All', 'Quote', 'Invoice', 'Formula spec', 'Label proof', 'Ingredient COA', 'Batch record'];
+    const allDocs = s.docFilter === 'All' ? docRows : docRows.filter((d) => d.type === s.docFilter);
+    const docFilters = filterList.map((f) => ({
+      label: f === 'All' ? 'All documents' : f, go: () => this.setState({ docFilter: f }),
+      bg: s.docFilter === f ? '#14181B' : '#fff', fg: s.docFilter === f ? '#fff' : '#3E454A',
+      border: s.docFilter === f ? '#14181B' : '#E4E0D9'
+    }));
+
+    const unitPrices = { 1000: 5.10, 2000: 4.62, 3000: 4.38, 5000: 4.10 };
+    const unit = unitPrices[s.qty];
+    const money = (n) => '$' + n.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const total = s.qty * unit;
+    const qtyOptions = [1000, 2000, 3000, 5000].map((q) => ({
+      label: q.toLocaleString('en-AU'), go: () => this.setState({ qty: q }),
+      bg: s.qty === q ? '#14181B' : '#fff', fg: s.qty === q ? '#fff' : '#3E454A',
+      border: s.qty === q ? '#14181B' : '#DCD7CF'
+    }));
+    const reorderBreakdown = [
+      ['Creatine monohydrate', 0.62], ['Tub, lid, scoop & seal', 0.225], ['Labels', 0.04],
+      ['Manufacturing, filling & QC', 0.09], ['Freight', 0.025]
+    ].map((b) => ({ k: b[0], v: money(total * b[1]) }));
+
+    const choiceDefs = [
+      { key: 'formula', label: 'Formula', note: 'CREA MONO v2 — approved 6 May 2026', options: ['Same formula', 'Change required'] },
+      { key: 'packaging', label: 'Packaging', note: '300 g black tub, 89 mm lid, 3 g scoop', options: ['Same packaging', 'Change required'] },
+      { key: 'label', label: 'Label', note: 'Artwork v2 — 168 × 96 mm', options: ['Same label', 'Update required'] },
+      { key: 'delivery', label: 'Delivery', note: 'Truganina VIC 3029, tail-lift', options: ['Same address', 'New address'] }
+    ];
+    const reorderChoices = choiceDefs.map((c) => ({
+      label: c.label, note: c.note,
+      options: c.options.map((o, i) => {
+        const active = (s['ro_' + c.key] || 0) === i;
+        return {
+          label: o, go: () => this.setState({ ['ro_' + c.key]: i }),
+          bg: active ? '#14181B' : '#fff', fg: active ? '#fff' : '#5F666C'
+        };
+      })
+    }));
+    const preflight = [
+      ['Creatine monohydrate — lot available', 'ok', '412 kg in Anvil core stock'],
+      ['Tubs, lids and scoops', 'ok', '2,400 in stock'],
+      ['Label stock', 'ok', 'Reprint from v2 plate'],
+      ['Formula version current', 'ok', 'v2 locked, no revisions pending'],
+      ['Client-owned stock applied', 'ok', '480 tubs held for NXT GEN LABS'],
+      ['Component expiry', 'ok', 'No components expire before production'],
+      ['Supplier pricing', 'warn', 'Creatine up 4% since May 2026'],
+      ['Previous manufacturing note', 'warn', 'Blend time raised to 14 min for flow'],
+      ['Outstanding invoices', 'warn', 'INV-2104 $4,180 due 5 Aug']
+    ].map((c) => ({
+      label: c[0], value: c[2],
+      mark: c[1] === 'ok' ? '●' : '▲',
+      tone: c[1] === 'ok' ? C.ok : C.warn
+    }));
+
+    const msgDefs = [
+      { who: 'Dana Whitmore', initials: 'DW', side: 'anvil', when: '27 Jul, 08:16', text: 'Morning Marcus. The v3 proof is in your approvals — Kestrel corrected the barcode quiet zone and the panel now reads 30 serves, not 28. Approve today and we hold the 25 August production window.', attachment: 'label-proof-v3.pdf' },
+      { who: 'Marcus Reid', initials: 'MR', side: 'client', when: '27 Jul, 08:44', text: 'Looking now. Is the mango sample feedback still needed if we already locked v3 of the formula?' },
+      { who: 'Dana Whitmore', initials: 'DW', side: 'anvil', when: '27 Jul, 08:51', text: 'Yes please. The formula is locked, but your V2 scores go into the flavour record so a reorder in 2028 tastes identical. It takes about three minutes.' },
+      { who: 'Priya Raman', initials: 'PR', side: 'anvil', when: '27 Jul, 09:05', text: 'Adding to that — nine of eleven raw materials are in and inspected. Alpha-GPC and AstraGin land Thursday, both with COAs. Nothing here is at risk.' }
+    ];
+    const messages = msgDefs.map((m) => ({
+      ...m,
+      dir: m.side === 'client' ? 'row-reverse' : 'row',
+      align: m.side === 'client' ? 'flex-end' : 'flex-start',
+      avBg: m.side === 'client' ? '#B4622A' : '#20262A', avFg: '#fff',
+      bg: m.side === 'client' ? '#14181B' : '#FAF9F6',
+      fg: m.side === 'client' ? '#E9E6E0' : '#25292D',
+      border: m.side === 'client' ? '#14181B' : '#E4E0D9'
+    }));
+    const threads = [
+      { title: 'APEX PUMP — Mango', when: '09:05', preview: 'Priya: nine of eleven raw materials are in and inspected…', rule: '#B4622A', bg: '#FAF9F6' },
+      { title: 'HYDRA SALTS — Watermelon', when: 'Yesterday', preview: 'Dana: batch passed in-process checks, filling Thursday.', rule: 'transparent', bg: '#fff' },
+      { title: 'Account & billing', when: '2 Jul', preview: 'Accounts: deposit received, thank you.', rule: 'transparent', bg: '#fff' }
+    ];
+
+    const mtabs = [
+      { id: 'home', label: 'Home' }, { id: 'project', label: 'Project' },
+      { id: 'approvals', label: 'Approvals', badge: pendingCount > 0 ? String(pendingCount) : '' },
+      { id: 'messages', label: 'Messages' }
+    ].map((t) => ({
+      ...t, go: () => this.setState({ mtab: t.id }),
+      fg: s.mtab === t.id ? '#FFFFFF' : '#767D83',
+      rule: s.mtab === t.id ? '#B4622A' : 'transparent'
+    }));
+
+    return {
+      isMobile: s.mobile,
+      deskDisplay: s.mobile ? 'none' : 'flex',
+      mtabs,
+      mHome: s.mtab === 'home', mProject: s.mtab === 'project',
+      mApprovals: s.mtab === 'approvals', mMessages: s.mtab === 'messages',
+      quoteLines, quoteTotals, financials,
+      quoteState: s.quote === 'accepted' ? 'Accepted' : 'Awaiting your decision',
+      quotePillBg: s.quote === 'accepted' ? C.okBg : C.warnBg,
+      quotePillFg: s.quote === 'accepted' ? C.ok : C.warn,
+      quoteBtnBg: s.quote === 'accepted' ? '#E7F0E9' : '#B4622A',
+      quoteBtnFg: s.quote === 'accepted' ? C.ok : '#fff',
+      quoteBtnLabel: s.quote === 'accepted' ? 'Accepted' : 'Accept quote',
+      quoteFoot: s.quote === 'accepted' ? 'Accepted by Marcus Reid · 27 Jul 2026, 09:41 AEST' : 'Accepting raises the deposit invoice automatically',
+      acceptQuote: () => this.setState({ quote: 'accepted' }),
+      allDocs, docFilters, docCount: allDocs.length + ' of ' + docRows.length + ' documents · nothing is ever deleted, only superseded',
+      reorderFacts: [
+        { k: 'Last batch', v: 'B-24-0611' }, { k: 'Delivered', v: '06 Jun 2026' },
+        { k: 'Last quantity', v: '2,000' }, { k: 'Last unit cost', v: '$4.62' },
+        { k: 'Formula', v: 'v2 (locked)' }, { k: 'Label', v: 'v2 (locked)' },
+        { k: 'Yield last run', v: '99.6%' }, { k: 'Complaints', v: 'None' }
+      ],
+      qtyOptions, reorderChoices, preflight, reorderBreakdown,
+      reorderTotal: money(total), reorderUnit: money(unit), reorderQty: s.qty.toLocaleString('en-AU'),
+      reorderBtn: s.reordered ? 'Reorder submitted' : 'Request this reorder',
+      reorderFoot: s.reordered ? 'Dana will confirm the slot within one business day' : 'No charge until you accept the firm quote',
+      submitReorder: () => this.setState({ reordered: true }),
+      threads, messages, draft: s.draft,
+      setDraft: (e) => this.setState({ draft: e.target.value }),
+      send: () => this.setState({ draft: '' }),
+      approvals, approvalHistory,
+      openCount: String(Math.max(pendingCount, 0)),
+      openTone: pendingCount > 0 ? C.warn : C.ok,
+      tabs: tabDefs,
+      tabOverview: effTab === 'overview', tabFormula: effTab === 'formula', tabSamples: effTab === 'samples',
+      tabPackaging: effTab === 'packaging', tabProduction: effTab === 'production', tabDocs: effTab === 'docs',
+      projChips: ['Pre-workout powder', '1,000 units', '435 g fill', '1 kg black tub', 'Custom label', 'Formula: NXT GEN LABS'],
+      stages, miniStages, scope, facts, ingredients, formulaNote, versions, spec, attrs,
+      roleBanner: isFinance ? 'Signed in as a Finance user. Formula and sample records are hidden on this account.' : isTeam ? 'Signed in as a Team member. Quotes, invoices and pricing are hidden on this account.' : '',
+      showRoleBanner: isFinance || isTeam,
+      feedback: s.feedback,
+      setFeedback: (e) => this.setState({ feedback: e.target.value }),
+      submitSample: () => this.setState({ feedback: s.feedback, sampleSent: true }),
+      sampleBtn: s.sampleSent ? 'Feedback submitted' : 'Submit flavour feedback',
+      sampleFacts: [
+        { k: 'Sample ID', v: 'SMP-2418-02' }, { k: 'Formula', v: 'v3' },
+        { k: 'Flavour version', v: 'MNG-V2' }, { k: 'Produced', v: '08 Jul 2026' },
+        { k: 'Dispatched', v: '09 Jul 2026' }, { k: 'Tracking', v: 'AUS-8841207' },
+        { k: 'Quantity', v: '3 × 14.5 g' }, { k: 'Feedback due', v: '29 Jul 2026' }
+      ],
+      sampleHistory: [
+        { id: 'MANGO V2', status: 'Awaiting', color: C.warn, date: 'Dispatched 09 Jul 2026', note: 'Masking system changed to AM-114 and sweetener dropped 12% to answer your bitterness note.' },
+        { id: 'MANGO V1', status: 'Rejected', color: C.danger, date: 'Rated 26 Jun 2026', note: 'You scored bitterness 7 and aftertaste 4. Flagged as metallic on the back palate at 250 mg caffeine.' }
+      ],
+      packs, packRows, jobs, job, prodStages, projDocs,
+      nav,
+      crumb: crumbs[screen],
+      isDash: screen === 'dashboard',
+      isProject: screen === 'project',
+      isApprovals: screen === 'approvals',
+      isQuotes: screen === 'quotes',
+      isDocs: screen === 'documents',
+      isReorder: screen === 'reorder',
+      isMessages: screen === 'messages',
+      activeBrand: s.brand,
+      brandsOpen: s.brandsOpen,
+      brands: ['NXT GEN LABS', 'Driven Nutrition', 'Bionyx Labware'].map((name) => ({
+        name, pick: () => this.setState({ brand: name, brandsOpen: false })
+      })),
+      toggleBrands: () => this.setState((st) => ({ brandsOpen: !st.brandsOpen })),
+      setDesktop: () => this.setState({ mobile: false }),
+      setMobile: () => this.setState({ mobile: true }),
+      deskBg: s.mobile ? 'transparent' : '#14181B',
+      deskFg: s.mobile ? '#6F767C' : '#FFFFFF',
+      mobBg: s.mobile ? '#14181B' : 'transparent',
+      mobFg: s.mobile ? '#FFFFFF' : '#6F767C',
+      goProject: () => this.setState({ screen: 'project', tab: 'overview' }),
+      goReorder: () => this.go('reorder'),
+      goMessages: () => this.go('messages'),
+      stats, waiting, projects, activity
+    };
+  }
+}
+</script>
+</body>
+</html>
